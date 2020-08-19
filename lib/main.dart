@@ -16,7 +16,11 @@ class GBVApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      theme: ThemeData.light().copyWith(
+        primaryColor: Color(0xff4169e1),
+        accentColor: Colors.blueAccent
+      ),
+      debugShowCheckedModeBanner: false,
       initialRoute: LoginScreen.id,
       routes: {
         LoginScreen.id : (context) => LoginScreen(),

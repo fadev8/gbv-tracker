@@ -22,11 +22,11 @@ class NavDrawer extends StatelessWidget {
         ),
         child: Drawer(
           child: Container(
-            //color: Colors.orange,
+            color: Color(0xff1f508B),
             child: ListView(
               children: [
                 ListTile(
-                  leading: Icon(FontAwesomeIcons.home),
+                  leading: Icon(FontAwesomeIcons.home,color: kDrawerIconsColor,),
                   title: Text('Dashboard',style: kDrawerTitleStyle,),
                   onTap: (){
                     Navigator.pushNamed(context, DashboardScreen.id);
@@ -37,7 +37,7 @@ class NavDrawer extends StatelessWidget {
                   ,
                 ),
                 ListTile(
-                  leading: Icon(FontAwesomeIcons.layerGroup),
+                  leading: Icon(FontAwesomeIcons.layerGroup,color: kDrawerIconsColor,),
                   title: Text('Received Cases',style: kDrawerTitleStyle,),
                   onTap: (){
                     Navigator.pushNamed(context, ReceivedCaseScreen.id);
@@ -48,7 +48,7 @@ class NavDrawer extends StatelessWidget {
                   ,
                 ),
                 ListTile(
-                  leading: Icon(FontAwesomeIcons.chevronUp
+                  leading: Icon(FontAwesomeIcons.chevronUp,color: kDrawerIconsColor,
                   ),
                   title: Text('Followup in progress',style: kDrawerTitleStyle,),
                   onTap: (){
@@ -60,7 +60,7 @@ class NavDrawer extends StatelessWidget {
                   ,
                 ),
                 ListTile(
-                  leading: Icon(FontAwesomeIcons.archive),
+                  leading: Icon(FontAwesomeIcons.archive, color: kDrawerIconsColor,),
                   title: Text('Archive',style: kDrawerTitleStyle,),
                   onTap: (){
                     Navigator.pushNamed(context, ArchiveScreen.id);
@@ -71,7 +71,7 @@ class NavDrawer extends StatelessWidget {
                   ,
                 ),
                 ListTile(
-                  leading: Icon(FontAwesomeIcons.trash),
+                  leading: Icon(FontAwesomeIcons.trash, color: kDrawerIconsColor,),
                   title: Text('Trash',style: kDrawerTitleStyle,),
                   onTap: (){
                     Navigator.pushNamed(context, TrashScreen.id);
@@ -81,28 +81,7 @@ class NavDrawer extends StatelessWidget {
                   color: Colors.white10
                   ,
                 ),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.chartBar),
-                  title: Text('Report',style: kDrawerTitleStyle,),
-                  onTap: (){
-                    Navigator.pushNamed(context, ReportScreen.id);
-                  },
-                ),
-                Divider(
-                  color: Colors.white10
-                  ,
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings',style: kDrawerTitleStyle,),
-                  onTap: (){
-                    Navigator.pushNamed(context,SettingsScreen.id);
-                  },
-                ),
-                Divider(
-                  color: Colors.white10
-                  ,
-                ),
+
               ],
             ),
           ),

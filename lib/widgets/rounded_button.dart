@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gbv_tracker/constants/constants.dart';
 
 class RoundedButton extends StatelessWidget {
 
@@ -20,7 +21,7 @@ class RoundedButton extends StatelessWidget {
           child: MaterialButton(
             minWidth: 300,
             onPressed: onPress,
-            child: Text(title),
+            child: Text(title,style: kButtonTextStyle,),
           ),
         ),
       ),

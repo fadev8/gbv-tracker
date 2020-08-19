@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 
 const kHeadingTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
-  fontSize: 32.0,
+  fontSize: 38.0,
 );
 
 const kDrawerTitleStyle = TextStyle(
   fontSize: 16.0,
-  color: Colors.white70,
+  color: Colors.white,
 );
+
+const kDrawerIconsColor = Colors.white70;
 
 const kTabsTitleStyle = TextStyle(
   fontSize: 16,
+);
+
+const kButtonTextStyle = TextStyle(
+  fontSize: 16,
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
 );
