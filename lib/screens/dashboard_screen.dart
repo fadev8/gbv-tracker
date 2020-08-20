@@ -6,6 +6,7 @@ import 'package:gbv_tracker/screens/pages/dashboardpages/cases_overview_page.dar
 import 'package:gbv_tracker/screens/pages/dashboardpages/figure_page.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gbv_tracker/widgets/logout_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   static String id = 'dashboard-screen';
@@ -31,16 +32,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appBar: AppBar(
             title: Text('Cases Dashboard'),
             actions: [
-              IconButton(
-                color: Colors.orange,
-                icon: Icon(
-                  FontAwesomeIcons.signOutAlt,
-                ),
-                onPressed: () {
-                  //TODO logout operation here
+              LogoutButton(
+                onPressed: (){
+                  //TODO : Logout operation here
                   Navigator.popAndPushNamed(context, LoginScreen.id);
                 },
-              )
+              ),
             ],
             //App TabBar===================
             bottom: TabBar(
@@ -82,7 +79,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 totalCases: 76,
               ),
               FigurePage(),//TODO pass in data here
-              AllCasesPage(),//TODO pass in data here
+              AllCasesPage(
+                closedCases: 23,
+                fakeCasesNumber: 3,femaleReportedNumber: 67,
+                maleReportedNumber: 34,
+                newlyReceived: 65,
+                ongoingCases: 12,
+                realCasesNumber: 54,
+              ),//TODO pass in data here
             ],
           ),
         ),

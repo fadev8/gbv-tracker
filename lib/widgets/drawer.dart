@@ -6,8 +6,6 @@ import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
-import 'package:gbv_tracker/screens/report_screen.dart';
-import 'package:gbv_tracker/screens/settings_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -29,7 +27,7 @@ class NavDrawer extends StatelessWidget {
                   leading: Icon(FontAwesomeIcons.home,color: kDrawerIconsColor,),
                   title: Text('Dashboard',style: kDrawerTitleStyle,),
                   onTap: (){
-                    Navigator.pushNamed(context, DashboardScreen.id);
+                    Navigator.popAndPushNamed(context, DashboardScreen.id);
                   },
                 ),
                 Divider(
@@ -40,7 +38,7 @@ class NavDrawer extends StatelessWidget {
                   leading: Icon(FontAwesomeIcons.layerGroup,color: kDrawerIconsColor,),
                   title: Text('Received Cases',style: kDrawerTitleStyle,),
                   onTap: (){
-                    Navigator.pushNamed(context, ReceivedCaseScreen.id);
+                    Navigator.popAndPushNamed(context, ReceivedCaseScreen.id);
                   },
                 ),
                 Divider(
@@ -52,7 +50,7 @@ class NavDrawer extends StatelessWidget {
                   ),
                   title: Text('Followup in progress',style: kDrawerTitleStyle,),
                   onTap: (){
-                    Navigator.pushNamed(context, FollowupScreen.id);
+                    Navigator.popAndPushNamed(context, FollowupScreen.id);
                   },
                 ),
                 Divider(
@@ -63,7 +61,7 @@ class NavDrawer extends StatelessWidget {
                   leading: Icon(FontAwesomeIcons.archive, color: kDrawerIconsColor,),
                   title: Text('Archive',style: kDrawerTitleStyle,),
                   onTap: (){
-                    Navigator.pushNamed(context, ArchiveScreen.id);
+                    Navigator.popAndPushNamed(context, ArchiveScreen.id);
                   },
                 ),
                 Divider(
@@ -74,7 +72,7 @@ class NavDrawer extends StatelessWidget {
                   leading: Icon(FontAwesomeIcons.trash, color: kDrawerIconsColor,),
                   title: Text('Trash',style: kDrawerTitleStyle,),
                   onTap: (){
-                    Navigator.pushNamed(context, TrashScreen.id);
+                    Navigator.popAndPushNamed(context, TrashScreen.id);
                   },
                 ),
                 Divider(

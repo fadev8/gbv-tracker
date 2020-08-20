@@ -4,8 +4,6 @@ import 'package:gbv_tracker/screens/dashboard_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
-import 'package:gbv_tracker/screens/report_screen.dart';
-import 'package:gbv_tracker/screens/settings_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
 
 void main() {
@@ -29,8 +27,6 @@ class GBVApp extends StatelessWidget {
         FollowupScreen.id : (context) => FollowupScreen(),
         ArchiveScreen.id : (context) => ArchiveScreen(),
         TrashScreen.id : (context) => TrashScreen(),
-        SettingsScreen.id : (context) =>SettingsScreen(),
-        ReportScreen.id : (context) => ReportScreen(),
       },
     );
   }
