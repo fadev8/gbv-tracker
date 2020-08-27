@@ -16,10 +16,17 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   String fromDate, toDate;
   List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
+  bool isRowSelected = false;
 
   void populateDataRows(){
     for(int i = 0; i <15; i++){
       DataRow row = DataRow(
+        onSelectChanged: (x){
+          if(x){
+            print('Selected index');
+          }
+
+        },
         cells: [
           DataCell(Text('099013$i\'43')),
           DataCell(Text('099013$i\'43')),
@@ -62,6 +69,12 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         appBar: AppBar(
           title: Text('Received Cases'),
           actions: [
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: (){
+                //TODO : show notifications here
+              },
+            ),
             LogoutButton(
               onPressed: (){
                 //TODO : Logout operation here
@@ -75,7 +88,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
           Wrap(
-          spacing: 4,
+          spacing: 20,
           children: [
             DropdownButton(
               onChanged: (index) {
@@ -89,7 +102,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
               items: [
                 //TODO populate the Dropdown with data
                 DropdownMenuItem(
-                  child: Text('Select District'),
+                  child: Text('District'),
                 ),
                 DropdownMenuItem(
                   child: Text('District 1'),

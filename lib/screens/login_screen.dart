@@ -24,16 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Center(
-                    child: Text(
-                  'GBV Tracker',
-                  style: kHeadingTextStyle,
-                )),
+                    child: Image(
+                      image: AssetImage('images/actiaid.png'),
+                    ),),
               ),
-              Expanded(
-                  flex: 1,
-                  child: Image(image: AssetImage('images/actiaid.png'),)),
               Expanded(
                 flex: 5,
                 child: SingleChildScrollView(

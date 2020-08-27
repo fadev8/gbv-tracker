@@ -62,6 +62,12 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         appBar: AppBar(
           title: Text('Archive'),
           actions: [
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: (){
+                //TODO : show notifications here
+              },
+            ),
             LogoutButton(
               onPressed: (){
                 //TODO : Logout operation here
