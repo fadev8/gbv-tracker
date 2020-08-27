@@ -62,6 +62,12 @@ class _FollowupScreenState extends State<FollowupScreen> {
         appBar: AppBar(
           title: Text('Followup in progress'),
           actions: [
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: (){
+                //TODO : show notifications here
+              },
+            ),
             LogoutButton(
               onPressed: (){
                 //TODO : Logout operation here
@@ -75,7 +81,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
             Wrap(
-              spacing: 4,
+              spacing: 20,
               children: [
                 DropdownButton(
                   onChanged: (index) {
@@ -89,7 +95,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
                   items: [
                     //TODO populate the Dropdown with data
                     DropdownMenuItem(
-                      child: Text('Select District'),
+                      child: Text('District'),
                     ),
                     DropdownMenuItem(
                       child: Text('District 1'),

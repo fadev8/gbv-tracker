@@ -30,8 +30,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         length: _tabLength,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Cases Dashboard'),
+            title: Text('Dashboard'),
             actions: [
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: (){
+                  //TODO : show notifications here
+                },
+              ),
               LogoutButton(
                 onPressed: (){
                   //TODO : Logout operation here

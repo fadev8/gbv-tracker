@@ -62,6 +62,12 @@ Widget build(BuildContext context) {
       appBar: AppBar(
         title: Text('Trash'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: (){
+              //TODO : show notifications here
+            },
+          ),
           LogoutButton(
             onPressed: (){
               //TODO : Logout operation here
