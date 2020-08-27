@@ -5,9 +5,10 @@ class RoundedInput extends StatelessWidget {
   final Function onChanged;
   final String hint;
   final bool obscureText;
+  final TextEditingController controller ;
 
 
-  RoundedInput({@required this.onChanged, this.hint, this.obscureText });
+  RoundedInput({@required this.onChanged, this.hint,this.controller, this.obscureText });
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class RoundedInput extends StatelessWidget {
 
         child: Container(
           child: TextField(
+            controller: controller,
             textAlign: TextAlign.center,
             obscureText: obscureText ?? false,
             decoration: InputDecoration(
