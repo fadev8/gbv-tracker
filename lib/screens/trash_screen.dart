@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
+import 'package:gbv_tracker/screens/CaseScreen.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
@@ -16,25 +17,29 @@ class _TrashScreenState extends State<TrashScreen> {
 String fromDate, toDate;
 List<DataRow> dataRows = List();
 DateTime _date = DateTime.now();
+bool isRowSelected = false;
 
-void populateDataRows(){
-  for(int i = 0; i <15; i++){
+void populateDataRows() {
+  for (int i = 0; i < 15; i++) {
     DataRow row = DataRow(
+        selected: isRowSelected,
+        onSelectChanged: (x) {
+          if (x) {
+            isRowSelected = x;
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return CaseScreen(
+                parentScreen: TrashScreen.id,
+              );
+            }));
+          }
+        },
         cells: [
           DataCell(Text('099013$i\'43')),
           DataCell(Text('099013$i\'43')),
           DataCell(Text('099013$i\'43')),
           DataCell(Text('099013$i\'43')),
-          DataCell(IconButton(
-            icon: Icon(Icons.calendar_view_day),
-            onPressed: (){
-              setState(() {
-                print('action');
-              });
-            },
-          ))
-        ]
-    );
+          DataCell(Text('3rfsdfsd$i')),
+        ]);
 
     dataRows.add(row);
   }

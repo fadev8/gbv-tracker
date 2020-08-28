@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
+import 'package:gbv_tracker/screens/CaseScreen.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
@@ -12,46 +13,45 @@ class ReceivedCaseScreen extends StatefulWidget {
 }
 
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
-
   String fromDate, toDate;
   List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
 
-  void populateDataRows(){
-    for(int i = 0; i <15; i++){
+  void populateDataRows() {
+    for (int i = 0; i < 15; i++) {
       DataRow row = DataRow(
-        onSelectChanged: (x){
-          if(x){
-            print('Selected index');
-          }
-
-        },
-        cells: [
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(IconButton(
-            icon: Icon(Icons.calendar_view_day),
-            onPressed: (){
-              setState(() {
-                print('action');
-              });
-            },
-          ))
-        ]
-      );
+          selected: isRowSelected,
+          onSelectChanged: (x) {
+            if (x) {
+              isRowSelected = x;
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return CaseScreen(
+                  parentScreen: ReceivedCaseScreen.id,
+                );
+              }));
+            }
+          },
+          cells: [
+            DataCell(Text('099013$i\'43')),
+            DataCell(Text('099013$i\'43')),
+            DataCell(Text('099013$i\'43')),
+            DataCell(Text('099013$i\'43')),
+            DataCell(Text('3rfsdfsd$i')),
+          ]);
 
       dataRows.add(row);
     }
   }
 
-  Future<String> initDatePicker() async{
-    DateTime pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(1950), lastDate: DateTime(2100));
+  Future<String> initDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2100));
 
-
-    if(pickedDate != null && pickedDate != _date){
+    if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
     }
     return _date.toString();
@@ -62,6 +62,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     super.initState();
     populateDataRows();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -71,12 +72,12 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: (){
+              onPressed: () {
                 //TODO : show notifications here
               },
             ),
             LogoutButton(
-              onPressed: (){
+              onPressed: () {
                 //TODO : Logout operation here
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
@@ -87,52 +88,52 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         body: ListView(
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
-          Wrap(
-          spacing: 20,
-          children: [
-            DropdownButton(
-              onChanged: (index) {
-                if(index != 0){
-                  setState(() {
+            Wrap(
+              spacing: 20,
+              children: [
+                DropdownButton(
+                  onChanged: (index) {
+                    if (index != 0) {
+                      setState(() {
+                        //TODO action when the menu is tapped
+                        print('selected index $index');
+                      });
+                    }
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('District'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('District 1'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('District 2'),
+                    ),
+                  ],
+                ),
+                DropdownButton(
+                  focusColor: Colors.grey,
+                  onChanged: (index) {
                     //TODO action when the menu is tapped
                     print('selected index $index');
-                  });
-                }
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('District'),
-                ),
-                DropdownMenuItem(
-                  child: Text('District 1'),
-                ),
-                DropdownMenuItem(
-                  child: Text('District 2'),
-                ),
-              ],
-            ),
-            DropdownButton(
-              focusColor: Colors.grey,
-              onChanged: (index) {
-                //TODO action when the menu is tapped
-                print('selected index $index');
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('GBV type'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Received cases'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Followup in progress'),
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('GBV type'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Received cases'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Followup in progress'),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
             Wrap(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -142,10 +143,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                     MaterialButton(
                       color: Colors.grey,
                       child: Text('From :'),
-                      onPressed: () async{
+                      onPressed: () async {
                         fromDate = await initDatePicker();
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                     ),
                     Container(
@@ -163,10 +163,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                       color: Colors.grey,
                       padding: EdgeInsets.all(0),
                       child: Text('To :'),
-                      onPressed: ()async{
+                      onPressed: () async {
                         toDate = await initDatePicker();
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                     ),
                     Container(
@@ -195,23 +194,13 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
               scrollDirection: Axis.horizontal,
               child: DataTable(
                 columns: [
-                  DataColumn(
-                    label: (Text('Phone Used to report'))
-                  ),
-                  DataColumn(
-                      label: (Text('Victim\'s name'))
-                  ),
-                  DataColumn(
-                      label: (Text('Description'))
-                  ),
-                  DataColumn(
-                      label: (Text('Date'))
-                  ),
-                  DataColumn(
-                      label: (Text('Action'))
-                  ),
+                  DataColumn(label: (Text('Phone Used to report'))),
+                  DataColumn(label: (Text('Victim\'s name'))),
+                  DataColumn(label: (Text('Description'))),
+                  DataColumn(label: (Text('Date'))),
+                  DataColumn(label: (Text('Action'))),
                 ],
-                rows:dataRows,
+                rows: dataRows,
               ),
             ),
           ],

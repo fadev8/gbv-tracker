@@ -21,3 +21,8 @@ const kButtonTextStyle = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
 );
+
+const kTableHeaderStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 14,
+);

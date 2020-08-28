@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
@@ -8,6 +11,7 @@ import 'package:gbv_tracker/widgets/logout_button.dart';
 
 class CaseScreen extends StatefulWidget {
   final String parentScreen;
+  static String id = 'single_case_screen';
 
   CaseScreen({@required this.parentScreen});
   @override
@@ -16,6 +20,67 @@ class CaseScreen extends StatefulWidget {
 
 class _CaseScreenState extends State<CaseScreen> {
   String _title;
+
+  List<IconButton> actionButtons(){
+    if(widget.parentScreen != null){
+      if(widget.parentScreen == ReceivedCaseScreen.id){
+        return [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.plus,color: Colors.greenAccent,),
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.edit,color: Colors.lightBlue),
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            onPressed: (){},
+          ),IconButton(
+            icon: Icon(FontAwesomeIcons.trash,color: Colors.red,),
+            onPressed: (){},
+          ),
+        ];
+      }
+      else if(widget.parentScreen == TrashScreen.id){
+        return [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.trashRestore,color: Colors.greenAccent,),
+            onPressed: (){},
+          ),
+        ];
+      }
+      else if(widget.parentScreen == FollowupScreen.id){
+        return [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.edit,color: Colors.lightBlue),
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            onPressed: (){},
+          ),
+        ];
+      }
+      else if(widget.parentScreen == ArchiveScreen.id){
+        return [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.edit,color: Colors.lightBlue),
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            tooltip: 'Unarchive',
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.trash,color: Colors.red,),
+            onPressed: (){},
+          ),
+        ];
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -43,7 +108,7 @@ class _CaseScreenState extends State<CaseScreen> {
         title: Text(_title),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.notifications,color: Colors.white,),
           ),
           LogoutButton(
              onPressed: (){
@@ -52,6 +117,45 @@ class _CaseScreenState extends State<CaseScreen> {
              },
           )
         ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: actionButtons(),
+            ),
+            Divider(
+              height: 1,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+
+                columns: [
+                  DataColumn(
+                      label: Text('Col', style: kTableHeaderStyle,)
+                  ),
+                  DataColumn(label: Expanded(child: Text('Value', style: kTableHeaderStyle,),),)
+                ],
+                rows: [
+                  DataRow(
+                    cells: [
+                      DataCell(
+                        Text('Sex')
+                      ),
+                      DataCell(
+                          Text('Male')
+                      ),
+                    ]
+                  )
+
+                ],
+              ),
+            )
+          ],
+        ),
       ),
 
     );
