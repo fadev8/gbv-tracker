@@ -16,6 +16,7 @@ class ChartCard extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 4),
         elevation: 2,
         child: PieChart(
+          showChartValuesInPercentage: false,
           dataMap: dataMap,
           colorList: colorList,
           legendPosition: LegendPosition.right,

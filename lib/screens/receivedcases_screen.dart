@@ -72,32 +72,6 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
 
-  void populateDataRows() {
-    for (int i = 0; i < 15; i++) {
-      DataRow row = DataRow(
-          selected: isRowSelected,
-          onSelectChanged: (x) {
-            if (x) {
-              isRowSelected = x;
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return CaseScreen(
-                  parentScreen: ReceivedCaseScreen.id,
-                );
-              }));
-            }
-          },
-          cells: [
-            DataCell(Text('099013$i\'43')),
-            DataCell(Text('099013$i\'43')),
-            DataCell(Text('099013$i\'43')),
-            DataCell(Text('099013$i\'43')),
-            DataCell(Text('3rfsdfsd$i')),
-          ]);
-
-      dataRows.add(row);
-    }
-  }
-
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
         context: context,
@@ -114,7 +88,6 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   @override
   void initState() {
     super.initState();
-    populateDataRows();
   }
 
   @override

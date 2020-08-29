@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/app_info_screen.dart';
 import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
+import 'package:gbv_tracker/screens/forgetten_password_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
@@ -28,6 +30,8 @@ class GBVApp extends StatelessWidget {
         FollowupScreen.id : (context) => FollowupScreen(),
         ArchiveScreen.id : (context) => ArchiveScreen(),
         TrashScreen.id : (context) => TrashScreen(),
+        ForgottenPasswordScreen.id : (context) => ForgottenPasswordScreen(),
+        AppInfoScreen.id : (context) => AppInfoScreen(),
       },
     );
   }

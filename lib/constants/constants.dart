@@ -26,3 +26,9 @@ const kTableHeaderStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 14,
 );
+
+const kBannerBottomTitle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: Colors.white
+);
