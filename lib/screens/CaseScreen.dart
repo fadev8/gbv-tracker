@@ -7,13 +7,15 @@ import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
+import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
 class CaseScreen extends StatefulWidget {
   final String parentScreen;
   static String id = 'single_case_screen';
+  Case actualCase;
 
-  CaseScreen({@required this.parentScreen});
+  CaseScreen({@required this.parentScreen, @required this.actualCase});
   @override
   _CaseScreenState createState() => _CaseScreenState();
 }
@@ -135,18 +137,18 @@ class _CaseScreenState extends State<CaseScreen> {
 
                 columns: [
                   DataColumn(
-                      label: Text('Col', style: kTableHeaderStyle,)
+                      label: Text('Names', style: kTableHeaderStyle,)
                   ),
-                  DataColumn(label: Expanded(child: Text('Value', style: kTableHeaderStyle,),),)
+                  DataColumn(label: Expanded(child: Text('Age', style: kTableHeaderStyle,),),)
                 ],
                 rows: [
                   DataRow(
                     cells: [
                       DataCell(
-                        Text('Sex')
+                        Text('${widget.actualCase.names}')
                       ),
                       DataCell(
-                          Text('Male')
+                          Text('${widget.actualCase.age}')
                       ),
                     ]
                   )
