@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gbv_tracker/constants/constants.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -15,10 +16,10 @@ class RoundedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(padding ?? 2.0),
+      padding: EdgeInsets.symmetric(horizontal: padding ?? 2.0,),
       child: Material(
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.lightBlueAccent,
+        color: color ?? Colors.lightBlueAccent,
         child: Container(
           child: MaterialButton(
             minWidth: minWidth ?? 30,

@@ -4,6 +4,7 @@ import 'package:gbv_tracker/screens/CaseScreen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
+import 'package:gbv_tracker/widgets/rounded_button.dart';
 
 import 'login_screen.dart';
 
@@ -115,108 +116,114 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         body: ListView(
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
-            Wrap(
-              spacing: 20,
-              children: [
-                DropdownButton(
-                  onChanged: (index) {
-                    if (index != 0) {
-                      setState(() {
-                        //TODO action when the menu is tapped
-                        print('selected index $index');
-                      });
-                    }
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('District'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('District 1'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('District 2'),
-                    ),
-                  ],
-                ),
-                DropdownButton(
-                  focusColor: Colors.grey,
-                  onChanged: (index) {
-                    //TODO action when the menu is tapped
-                    print('selected index $index');
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('GBV type'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Received cases'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Followup in progress'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Wrap(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    MaterialButton(
-                      color: Colors.grey,
-                      child: Text('From :'),
-                      onPressed: () async {
-                        fromDate = await initDatePicker();
-                        setState(() {});
-                      },
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        fromDate ?? '',
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FlatButton(
-                      color: Colors.grey,
-                      padding: EdgeInsets.all(0),
-                      child: Text('To :'),
-                      onPressed: () async {
-                        toDate = await initDatePicker();
-                        setState(() {});
-                      },
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        toDate ?? '',
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatButton(
-                  child: Text('Submit', style: kButtonTextStyle),
-                  color: Colors.blueAccent,
-                  onPressed: () {
-                    //TODO Submit the value of the Dropdown button
-                  },
-                ),
-              ],
-            ),
+           ExpansionTile(
+             title: Text('Filter'),
+             leading: Icon(Icons.filter_list),
+             children: [
+               Wrap(
+                 spacing: 20,
+                 children: [
+                   DropdownButton(
+                     onChanged: (index) {
+                       if (index != 0) {
+                         setState(() {
+                           //TODO action when the menu is tapped
+                           print('selected index $index');
+                         });
+                       }
+                     },
+                     items: [
+                       //TODO populate the Dropdown with data
+                       DropdownMenuItem(
+                         child: Text('District'),
+                       ),
+                       DropdownMenuItem(
+                         child: Text('District 1'),
+                       ),
+                       DropdownMenuItem(
+                         child: Text('District 2'),
+                       ),
+                     ],
+                   ),
+                   DropdownButton(
+                     focusColor: Colors.grey,
+                     onChanged: (index) {
+                       //TODO action when the menu is tapped
+                       print('selected index $index');
+                     },
+                     items: [
+                       //TODO populate the Dropdown with data
+                       DropdownMenuItem(
+                         child: Text('GBV type'),
+                       ),
+                       DropdownMenuItem(
+                         child: Text('Received cases'),
+                       ),
+                       DropdownMenuItem(
+                         child: Text('Followup in progress'),
+                       ),
+                     ],
+                   ),
+                 ],
+               ),
+               Wrap(
+                 //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 children: [
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     children: [
+                       MaterialButton(
+                         color: Colors.grey,
+                         child: Text('From :'),
+                         onPressed: () async {
+                           fromDate = await initDatePicker();
+                           setState(() {});
+                         },
+                       ),
+                       Container(
+                         padding: EdgeInsets.all(8),
+                         child: Text(
+                           fromDate ?? '',
+                         ),
+                       ),
+                     ],
+                   ),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     children: [
+                       FlatButton(
+                         color: Colors.grey,
+                         padding: EdgeInsets.all(0),
+                         child: Text('To :'),
+                         onPressed: () async {
+                           toDate = await initDatePicker();
+                           setState(() {});
+                         },
+                       ),
+                       Container(
+                         padding: EdgeInsets.all(8),
+                         child: Text(
+                           toDate ?? '',
+                         ),
+                       ),
+                     ],
+                   ),
+                 ],
+               ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.end,
+                 children: [
+                   RoundedButton(
+                     title:'Preview',
+                     color: Colors.blueAccent,
+                     onPress: () {
+                       //TODO Submit the value of the Dropdown button
+                     },
+                   ),
+                 ],
+               ),
+             ],
+           ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
