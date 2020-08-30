@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
+import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
@@ -14,11 +16,64 @@ class ReceivedCaseScreen extends StatefulWidget {
 }
 
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
-
   String fromDate, toDate;
   List<DataRow> dataRows = List();
+  List<Case> cases = [
+    Case(
+        abuserAgeRange: '14-17',
+        abuserSex: 'MALE',
+        age: 25,
+        channel: "USSD",
+        districtId: 2,
+        id: 2598,
+        names: "SONIA",
+        receivedDate: "2020-08-26",
+        status: "PENDING",
+        ussdUserId: 5155,
+        victimPhoneNid: "1199280059936114",
+        violenceType: "SEXUAL",
+        victimMaritalStatus: "MARRIED",
+        victimSector: 1,
+        victimSex: 'FEMALE',
+        violenceDescription: "You see"),
+    Case(
+        abuserAgeRange: '14-17',
+        abuserSex: 'MALE',
+        age: 35,
+        channel: "USSD",
+        districtId: 2,
+        id: 2598,
+        names: "CAROL",
+        receivedDate: "2020-08-26",
+        status: "PENDING",
+        ussdUserId: 5155,
+        victimPhoneNid: "1199280059936114",
+        violenceType: "SEXUAL",
+        victimMaritalStatus: "MARRIED",
+        victimSector: 1,
+        victimSex: 'FEMALE',
+        violenceDescription: "Cnskjde"),
+    Case(
+        abuserAgeRange: '14-17',
+        abuserSex: 'MALE',
+        age: 29,
+        channel: "USSD",
+        districtId: 2,
+        id: 2598,
+        names: "ALIMA",
+        receivedDate: "2020-08-26",
+        status: "PENDING",
+        ussdUserId: 5155,
+        victimPhoneNid: "1199280059936114",
+        violenceType: "SEXUAL",
+        victimMaritalStatus: "MARRIED",
+        victimSector: 1,
+        victimSex: 'FEMALE',
+        violenceDescription: "You see"),
+  ];
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
+
 
   ReceivedCaseData() async
   {
@@ -81,11 +136,15 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     }
   }
 
-  Future<String> initDatePicker() async{
-    DateTime pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(1950), lastDate: DateTime(2100));
+  Future<String> initDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2100));
 
 
-    if(pickedDate != null && pickedDate != _date){
+    if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
     }
     return _date.toString();
@@ -94,9 +153,12 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   @override
   void initState() {
     super.initState();
-    populateDataRows();
+
+//    populateDataRows();
     ReceivedCaseData();
+
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -106,12 +168,12 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: (){
+              onPressed: () {
                 //TODO : show notifications here
               },
             ),
             LogoutButton(
-              onPressed: (){
+              onPressed: () {
                 //TODO : Logout operation here
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
@@ -122,52 +184,52 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         body: ListView(
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
-          Wrap(
-          spacing: 20,
-          children: [
-            DropdownButton(
-              onChanged: (index) {
-                if(index != 0){
-                  setState(() {
+            Wrap(
+              spacing: 20,
+              children: [
+                DropdownButton(
+                  onChanged: (index) {
+                    if (index != 0) {
+                      setState(() {
+                        //TODO action when the menu is tapped
+                        print('selected index $index');
+                      });
+                    }
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('District'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('District 1'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('District 2'),
+                    ),
+                  ],
+                ),
+                DropdownButton(
+                  focusColor: Colors.grey,
+                  onChanged: (index) {
                     //TODO action when the menu is tapped
                     print('selected index $index');
-                  });
-                }
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('District'),
-                ),
-                DropdownMenuItem(
-                  child: Text('District 1'),
-                ),
-                DropdownMenuItem(
-                  child: Text('District 2'),
-                ),
-              ],
-            ),
-            DropdownButton(
-              focusColor: Colors.grey,
-              onChanged: (index) {
-                //TODO action when the menu is tapped
-                print('selected index $index');
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('GBV type'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Received cases'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Followup in progress'),
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('GBV type'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Received cases'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Followup in progress'),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
             Wrap(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -177,10 +239,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                     MaterialButton(
                       color: Colors.grey,
                       child: Text('From :'),
-                      onPressed: () async{
+                      onPressed: () async {
                         fromDate = await initDatePicker();
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                     ),
                     Container(
@@ -198,10 +259,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                       color: Colors.grey,
                       padding: EdgeInsets.all(0),
                       child: Text('To :'),
-                      onPressed: ()async{
+                      onPressed: () async {
                         toDate = await initDatePicker();
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                     ),
                     Container(
@@ -230,6 +290,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
               scrollDirection: Axis.horizontal,
               child: DataTable(
                 columns: [
+
                   DataColumn(
                       label: (Text('Channel'))
                   ),
@@ -250,11 +311,23 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                   ),
                 ],
                 rows:receivedCasesList.map(((element) => DataRow(
-                  onSelectChanged: (x){
-                    if(x){
-                      print('Selected index');
-                    }
+//                  onSelectChanged: (x){
+//
+//
+//
+//                    if(x){
+//
+//                      print('Selected index');
+//                    }
+//
+//                  },
 
+                    onSelectChanged: (b){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context){
+                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: element,);
+                      }
+                    ));
                   },
                   cells: <DataCell>[
                     DataCell(Text(element["channel"])),
@@ -272,6 +345,28 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                     ))
                   ],
                 )),).toList()
+
+//                  DataColumn(label: (Text('Phone Used to report'))),
+//                  DataColumn(label: (Text('Victim\'s name'))),
+//                  DataColumn(label: (Text('Description'))),
+//                  DataColumn(label: (Text('Date'))),
+//                ],
+//                rows: cases.map((cas) => DataRow(
+//                  onSelectChanged: (b){
+//                    Navigator.push(context, MaterialPageRoute(
+//                      builder: (context){
+//                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: cas,);
+//                      }
+//                    ));
+//                  },
+//                  cells: [
+//                    DataCell(Text('${cas.victimPhoneNid}')),
+//                    DataCell(Text('${cas.names}')),
+//                    DataCell(Text('${cas.violenceDescription}')),
+//                    DataCell(Text('${cas.receivedDate}')),
+//                  ],
+//                )).toList(),
+
               ),
             ),
           ],

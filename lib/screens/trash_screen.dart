@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
+import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
@@ -14,31 +16,62 @@ class TrashScreen extends StatefulWidget {
 class _TrashScreenState extends State<TrashScreen> {
 
 String fromDate, toDate;
-List<DataRow> dataRows = List();
 DateTime _date = DateTime.now();
+bool isRowSelected = false;
+List<Case> cases = [
+  Case(
+      abuserAgeRange: '14-17',
+      abuserSex: 'MALE',
+      age: 25,
+      channel: "USSD",
+      districtId: 2,
+      id: 2598,
+      names: "SONIA",
+      receivedDate: "2020-08-26",
+      status: "PENDING",
+      ussdUserId: 5155,
+      victimPhoneNid: "1199280059936114",
+      violenceType: "SEXUAL",
+      victimMaritalStatus: "MARRIED",
+      victimSector: 1,
+      victimSex: 'FEMALE',
+      violenceDescription: "You see"),
+  Case(
+      abuserAgeRange: '14-17',
+      abuserSex: 'MALE',
+      age: 35,
+      channel: "USSD",
+      districtId: 2,
+      id: 2598,
+      names: "CAROL",
+      receivedDate: "2020-08-26",
+      status: "PENDING",
+      ussdUserId: 5155,
+      victimPhoneNid: "1199280059936114",
+      violenceType: "SEXUAL",
+      victimMaritalStatus: "MARRIED",
+      victimSector: 1,
+      victimSex: 'FEMALE',
+      violenceDescription: "Cnskjde"),
+  Case(
+      abuserAgeRange: '14-17',
+      abuserSex: 'MALE',
+      age: 29,
+      channel: "USSD",
+      districtId: 2,
+      id: 2598,
+      names: "ALIMA",
+      receivedDate: "2020-08-26",
+      status: "PENDING",
+      ussdUserId: 5155,
+      victimPhoneNid: "1199280059936114",
+      violenceType: "SEXUAL",
+      victimMaritalStatus: "MARRIED",
+      victimSector: 1,
+      victimSex: 'FEMALE',
+      violenceDescription: "You see"),
+];
 
-void populateDataRows(){
-  for(int i = 0; i <15; i++){
-    DataRow row = DataRow(
-        cells: [
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(IconButton(
-            icon: Icon(Icons.calendar_view_day),
-            onPressed: (){
-              setState(() {
-                print('action');
-              });
-            },
-          ))
-        ]
-    );
-
-    dataRows.add(row);
-  }
-}
 
 Future<String> initDatePicker() async{
   DateTime pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(1950), lastDate: DateTime(2100));
@@ -53,7 +86,7 @@ Future<String> initDatePicker() async{
 @override
 void initState() {
   super.initState();
-  populateDataRows();
+
 }
 @override
 Widget build(BuildContext context) {
@@ -200,11 +233,23 @@ Widget build(BuildContext context) {
                 DataColumn(
                     label: (Text('Date'))
                 ),
-                DataColumn(
-                    label: (Text('Action'))
-                ),
+
               ],
-              rows:dataRows,
+              rows:cases.map((cas) => DataRow(
+                onSelectChanged: (b){
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context){
+                        return CaseScreen(parentScreen: TrashScreen.id,actualCase: cas,);
+                      }
+                  ));
+                },
+                cells: [
+                  DataCell(Text('${cas.victimPhoneNid}')),
+                  DataCell(Text('${cas.names}')),
+                  DataCell(Text('${cas.violenceDescription}')),
+                  DataCell(Text('${cas.receivedDate}')),
+                ],
+              )).toList(),
             ),
           ),
         ],

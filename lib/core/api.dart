@@ -6,7 +6,7 @@ import 'dart:io';
 
 
 
-    const String BASE_URL = "http://192.168.1.9:8080/actionaid/";
+    const String BASE_URL = "http://192.168.1.6:8080/actionaid/";
 //   const String BASE_URL = "http://172.20.10.2:8080/actionaid/";
 
 
@@ -28,7 +28,7 @@ Map<String, dynamic> responseAllCasesData ;
 
 
 Map<String, dynamic> receivedCasesListJson ;
-List<dynamic> receivedCasesList;
+List<dynamic> receivedCasesList=[];
 
 
 
