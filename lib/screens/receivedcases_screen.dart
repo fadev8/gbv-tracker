@@ -4,6 +4,8 @@ import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
 import 'login_screen.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class ReceivedCaseScreen extends StatefulWidget {
   static String id = 'received-cases-screen';
@@ -17,6 +19,38 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
+
+  ReceivedCaseData() async
+  {
+    var user_category = await getRef("user_category");
+
+    if (user_category!=null)
+    {
+      if (user_category=="SU")
+      {
+        receivedCasesListJson = await getReceivedCaseList();
+        setState(() {
+
+          if(receivedCasesListJson['status']=="1")
+          {
+            receivedCasesList=receivedCasesListJson['data'];
+            print(receivedCasesList);
+          }
+        });
+
+
+
+
+      }
+      else
+      {
+
+      }
+    }else
+    {
+
+    }
+  }
 
   void populateDataRows(){
     for(int i = 0; i <15; i++){
@@ -61,6 +95,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   void initState() {
     super.initState();
     populateDataRows();
+    ReceivedCaseData();
   }
   @override
   Widget build(BuildContext context) {
@@ -196,13 +231,16 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
               child: DataTable(
                 columns: [
                   DataColumn(
-                    label: (Text('Phone Used to report'))
+                      label: (Text('Channel'))
+                  ),
+                  DataColumn(
+                    label: (Text('GBV Type'))
                   ),
                   DataColumn(
                       label: (Text('Victim\'s name'))
                   ),
                   DataColumn(
-                      label: (Text('Description'))
+                      label: (Text('Victim\'s sex'))
                   ),
                   DataColumn(
                       label: (Text('Date'))
@@ -211,7 +249,29 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                       label: (Text('Action'))
                   ),
                 ],
-                rows:dataRows,
+                rows:receivedCasesList.map(((element) => DataRow(
+                  onSelectChanged: (x){
+                    if(x){
+                      print('Selected index');
+                    }
+
+                  },
+                  cells: <DataCell>[
+                    DataCell(Text(element["channel"])),
+                    DataCell(Text(element["violence_type"])),
+                    DataCell(Text(element["names"])),
+                    DataCell(Text(element["victim_sex"])),
+                    DataCell(Text(element["received_date"])),
+                    DataCell(IconButton(
+                      icon: Icon(Icons.calendar_view_day),
+                      onPressed: (){
+                        setState(() {
+                          print('action');
+                        });
+                      },
+                    ))
+                  ],
+                )),).toList()
               ),
             ),
           ],

@@ -66,7 +66,7 @@ final TextEditingController passwordField=new  TextEditingController();
                                 setRef("user_district",responseData['district'].toString());
                                 setRef("user_sector",responseData['sector'].toString());
 
-
+                             dashboardData();
 
                               Navigator.pushNamed(context, DashboardScreen.id);
 
@@ -98,6 +98,82 @@ final TextEditingController passwordField=new  TextEditingController();
 
 
             }
+
+
+
+  int today=0,lastSevenDays=0,thisMonth=0,lastNinetyDays=0,total=0,pending=0,progress=0,closed=0;
+  int allCase=0,physical=0,psychology=0,sexual=0,property=0,others=0;
+  int male=0,female=0,fake=0,real=0,newlyReceived=0,ongoing=0,archived=0;
+
+
+
+
+  dashboardData() async
+  {
+
+    var user_category = await getRef("user_category");
+
+    if (user_category!=null)
+    {
+      if (user_category=="SU")
+      {
+        //get Overview data
+        responseOverviewJson =await getDefaultAdminCaseOverview();
+        print(responseOverviewJson);
+        responseOverviewData=responseOverviewJson['data'];
+
+        if(responseOverviewData!=null){
+
+          closed =responseOverviewData['pending'];
+          progress=responseOverviewData['followup_in_progress'];
+          pending= responseOverviewData['pending'];
+          lastSevenDays= responseOverviewData['last_seven_days'];
+          lastNinetyDays =responseOverviewData['last_nighty_days'];
+          thisMonth= responseOverviewData['this_month'];
+          today= responseOverviewData['today'] ;
+          total= responseOverviewData['total_cases'];
+
+        }
+
+        //get caseFigures Data
+        responseFigureDataJson=await getDefaultAdminCaseFigure();
+        responseFigureData=responseFigureDataJson['data'];
+        print(responseFigureData);
+
+        if(responseFigureData!=null) {
+          allCase = responseFigureData['all'];
+          physical = responseFigureData['physical'];
+          psychology = responseFigureData['psychological'];
+          sexual = responseFigureData['sexual'];
+          property = responseFigureData['property'];
+          others = responseFigureData['other'];
+        }
+
+        responseAllCasesDataJson=await getAllCases();
+        responseAllCasesData =responseAllCasesDataJson['data'];
+        print(responseAllCasesData);
+
+        if(responseAllCasesData!=null) {
+
+          male = responseAllCasesData['male'];
+          female = responseAllCasesData['female'];
+          real = responseAllCasesData['real'];
+          fake = responseAllCasesData['fake'];
+          ongoing = responseAllCasesData['ongoing'];
+          newlyReceived = responseAllCasesData['received'];
+          archived = responseAllCasesData['closed'];
+        }
+
+
+
+
+      }
+      else
+      {
+
+      }
+    }
+  }
 
 
 
