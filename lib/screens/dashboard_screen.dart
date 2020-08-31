@@ -44,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       if(responseOverviewData!=null){
 
                            setState(() {
-                             closed =responseOverviewData['pending'];
+                             closed =responseOverviewData['closed_cases'];
                              progress=responseOverviewData['followup_in_progress'];
                              pending= responseOverviewData['pending'];
                              lastSevenDays= responseOverviewData['last_seven_days'];

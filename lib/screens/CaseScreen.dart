@@ -9,6 +9,7 @@ import 'package:gbv_tracker/screens/forms/edit_case_scren.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
+import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 
@@ -17,6 +18,10 @@ import 'package:gbv_tracker/core/init.dart';
 
 import 'package:gbv_tracker/widgets/rounded_button.dart';
 import 'package:gbv_tracker/widgets/rounded_input.dart';
+import 'package:toast/toast.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:sweetalert/sweetalert.dart';
 
 
 class CaseScreen extends StatefulWidget {
@@ -33,8 +38,57 @@ class CaseScreen extends StatefulWidget {
 class _CaseScreenState extends State<CaseScreen> {
   String _title;
 
-  TextEditingController archiveControler, trashControler;
+  TextEditingController archiveControler=new TextEditingController(), trashControler=new TextEditingController();
+// login  Post request
 
+  String acrhiveReason, acrhiveTrash;
+
+
+
+  // Archive
+
+  ArchiveCase(String reason,String status) async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "Archive-Case",
+      'record': widget.case_id.toString(),
+      'reason': reason,
+      'status': status.toLowerCase(),
+      'source': await getRef("user_category"),
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, ArchiveScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
 
   String victim_name = "";
   String victim_sex = "";
@@ -68,6 +122,8 @@ class _CaseScreenState extends State<CaseScreen> {
   String intervation_done = "";
   String intervation_done_by = "";
   String intervation_done_details = "";
+
+  String case_status = "";
 
 
   ReceivedCaseDetailsData() async
@@ -122,6 +178,9 @@ class _CaseScreenState extends State<CaseScreen> {
               responseCasesDetailsData['violence_description'];
             if (responseCasesDetailsData['violence_type'] != null)
               violence_type = responseCasesDetailsData['violence_type'];
+
+            if (responseCasesDetailsData['status'] != null)
+              case_status = responseCasesDetailsData['status'];
 
 
             if (responseCasesDetailsData['abuser_name'] != null)
@@ -902,7 +961,19 @@ class _CaseScreenState extends State<CaseScreen> {
                   RoundedButton(
                     title: 'Confirm',
                     onPress: () {
-                      //TODO : Archive a chase here
+                      acrhiveReason=archiveControler.text;
+
+                      if (acrhiveReason != '') {
+                        print(acrhiveReason);
+                       ArchiveCase(acrhiveReason, case_status);
+//                            Navigator.pushNamed(context, DashboardScreen.id);
+////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                      } else {
+                        Toast.show("Please fill all the field and proceed",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM);
+                      }
                     },
                     color: Colors.blueAccent,
                   )

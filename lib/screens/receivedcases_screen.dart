@@ -247,7 +247,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                     DataCell(Text(element["telephone_used_to_report"])),
                     DataCell(Text(element["victim_name"])),
                     DataCell(Text(element["violence_type"])),
-                    DataCell(Text(element["violence_description"])),
+                    DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),
                     DataCell(Text(element["received_date"])),
                   ],
                 )),).toList()
