@@ -17,124 +17,42 @@ class ReceivedCaseScreen extends StatefulWidget {
 
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   String fromDate, toDate;
+  String start="10",  limit ="0";
   List<DataRow> dataRows = List();
-  List<Case> cases = [
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 25,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "SONIA",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "You see"),
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 35,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "CAROL",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "Cnskjde"),
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 29,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "ALIMA",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "You see"),
-  ];
+
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
 
 
-  ReceivedCaseData() async
-  {
-    var user_category = await getRef("user_category");
+                        ReceivedCaseData() async
+                        {
+                          var user_category = await getRef("user_category");
 
-    if (user_category!=null)
-    {
-      if (user_category=="SU")
-      {
-        receivedCasesListJson = await getReceivedCaseList();
-        setState(() {
+                          if (user_category!=null)
+                          {
+                            if (user_category=="SU")
+                            {
+                              receivedCasesListJson = await getReceivedCaseList(start,limit);
+                              setState(() {
 
-          if(receivedCasesListJson['status']=="1")
-          {
-            receivedCasesList=receivedCasesListJson['data'];
-            print(receivedCasesList);
-          }
-        });
+                                    if(receivedCasesListJson['status']=="1")
+                                    {
+                                          receivedCasesList=receivedCasesListJson['data'];
+                                          print(receivedCasesList);
+                                    }
+                              });
+                            }
+                            else
+                            {
+
+                            }
+                          }else
+                          {
+
+                          }
+                        }
 
 
-
-
-      }
-      else
-      {
-
-      }
-    }else
-    {
-
-    }
-  }
-
-  void populateDataRows(){
-    for(int i = 0; i <15; i++){
-      DataRow row = DataRow(
-        onSelectChanged: (x){
-          if(x){
-            print('Selected index');
-          }
-
-        },
-        cells: [
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(Text('099013$i\'43')),
-          DataCell(IconButton(
-            icon: Icon(Icons.calendar_view_day),
-            onPressed: (){
-              setState(() {
-                print('action');
-              });
-            },
-          ))
-        ]
-      );
-
-      dataRows.add(row);
-    }
-  }
 
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
@@ -154,7 +72,6 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   void initState() {
     super.initState();
 
-//    populateDataRows();
     ReceivedCaseData();
 
   }
@@ -295,54 +212,36 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                       label: (Text('Channel'))
                   ),
                   DataColumn(
-                    label: (Text('GBV Type'))
+                    label: (Text('Phone Used to report'))
                   ),
                   DataColumn(
                       label: (Text('Victim\'s name'))
                   ),
                   DataColumn(
-                      label: (Text('Victim\'s sex'))
+                      label: (Text('Violence Type'))
+                  ),
+                  DataColumn(
+                      label: (Text('Description'))
                   ),
                   DataColumn(
                       label: (Text('Date'))
                   ),
-                  DataColumn(
-                      label: (Text('Action'))
-                  ),
                 ],
                 rows:receivedCasesList.map(((element) => DataRow(
-//                  onSelectChanged: (x){
-//
-//
-//
-//                    if(x){
-//
-//                      print('Selected index');
-//                    }
-//
-//                  },
-
-                    onSelectChanged: (b){
+              onSelectChanged: (b){
                     Navigator.push(context, MaterialPageRoute(
-                      builder: (context){
-                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: element,);
-                      }
+                        builder: (context){
+                          return CaseScreen(parentScreen: ReceivedCaseScreen.id,case_id: element["case_id"],);
+                        }
                     ));
                   },
                   cells: <DataCell>[
                     DataCell(Text(element["channel"])),
+                    DataCell(Text(element["telephone_used_to_report"])),
+                    DataCell(Text(element["victim_name"])),
                     DataCell(Text(element["violence_type"])),
-                    DataCell(Text(element["names"])),
-                    DataCell(Text(element["victim_sex"])),
+                    DataCell(Text(element["violence_description"])),
                     DataCell(Text(element["received_date"])),
-                    DataCell(IconButton(
-                      icon: Icon(Icons.calendar_view_day),
-                      onPressed: (){
-                        setState(() {
-                          print('action');
-                        });
-                      },
-                    ))
                   ],
                 )),).toList()
 

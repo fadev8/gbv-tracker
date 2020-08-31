@@ -239,7 +239,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   onSelectChanged: (b){
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context){
-                          return CaseScreen(parentScreen: ArchiveScreen.id,actualCase: cas,);
+                          return CaseScreen(parentScreen: ArchiveScreen.id,case_id: 1,);
                         }
                     ));
                   },

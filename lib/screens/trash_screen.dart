@@ -239,7 +239,7 @@ Widget build(BuildContext context) {
                 onSelectChanged: (b){
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context){
-                        return CaseScreen(parentScreen: TrashScreen.id,actualCase: cas,);
+                        return CaseScreen(parentScreen: TrashScreen.id,case_id: 1,);
                       }
                   ));
                 },

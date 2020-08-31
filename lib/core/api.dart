@@ -31,6 +31,15 @@ Map<String, dynamic> receivedCasesListJson ;
 List<dynamic> receivedCasesList=[];
 
 
+// Case Card Data Collection
+
+Map<String, dynamic> responseCasesDetailsDataJson ;
+Map<String, dynamic> responseCasesDetailsData ;
+
+Map<String, dynamic> responseCasesSupportDataJson ;
+Map<String, dynamic> responseCasesSupportData ;
+
+
 
 getHeaders() async{
 
@@ -83,17 +92,45 @@ getDefaultAdminCaseFigure() async {
 
 
 
-    getReceivedCaseList()  async {
-      var resp = await http.post(BASE_URL+"claims",
-          body: {
+            getReceivedCaseList(String start, String limit)  async {
+              var resp = await http.post(BASE_URL+"claims",
+                  body: {
 
-            'action': "getReceivedCaseAdmin",
-          });
+                    'action': "get-Received-Case-Admin",
+                    'start':start,
+                    'limit': limit,
+                  });
 
-      var jsonResponse = convert.jsonDecode(resp.body);
-      return jsonResponse;
+              var jsonResponse = convert.jsonDecode(resp.body);
+              return jsonResponse;
 
-    }
+            }
+
+            getCaseDetails(String case_id)  async {
+              var resp = await http.post(BASE_URL+"claims",
+                  body: {
+
+                    'action': "get-Case-Details",
+                    'case_id':case_id,
+                  });
+
+              var jsonResponse = convert.jsonDecode(resp.body);
+              return jsonResponse;
+
+            }
+
+          getCaseSupportDetails(String case_id)  async {
+            var resp = await http.post(BASE_URL+"claims",
+                body: {
+
+                  'action': "get-Case-Support-Details",
+                  'case_id':case_id,
+                });
+
+            var jsonResponse = convert.jsonDecode(resp.body);
+            return jsonResponse;
+
+          }
 
 
 

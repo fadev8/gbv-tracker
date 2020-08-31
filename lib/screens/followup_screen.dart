@@ -239,7 +239,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
                   onSelectChanged: (b){
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context){
-                          return CaseScreen(parentScreen: FollowupScreen.id,actualCase: cas,);
+                          return CaseScreen(parentScreen: FollowupScreen.id,case_id: 1,);
                         }
                     ));
                   },

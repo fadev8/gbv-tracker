@@ -9,21 +9,149 @@ import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class CaseScreen extends StatefulWidget {
   final String parentScreen;
   static String id = 'single_case_screen';
-  Case actualCase;
+  final int case_id;
 
-  CaseScreen({@required this.parentScreen, @required this.actualCase});
+  CaseScreen({@required this.parentScreen, @required this.case_id});
   @override
   _CaseScreenState createState() => _CaseScreenState();
+
 }
 
 class _CaseScreenState extends State<CaseScreen> {
   String _title;
+            String victim_name="";
+            String victim_sex="";
+            int victim_age=0;
+            String victim_id_telephone="";
+            String victim_marital_status="";
+            String victim_province="";
+            String victim_district="";
+            String victim_sector="";
+            String victim_cell="";
+            String victim_village="";
+
+            String violence_type="";
+            String violence_description="";
+
+
+            String abuser_name="";
+            String abuser_relation="";
+            String abuser_marital_status="";
+            String abuser_sex="";
+            String abuser_age="0";
+            String abuser_to_police="NO";
+
+            String abuser_province="";
+            String abuser_district="";
+            String abuser_sector="";
+            String abuser_cell="";
+            String abuser_village="";
+
+
+            String intervation_done="";
+            String intervation_done_by="";
+            String intervation_done_details="";
+
+
+
+                    ReceivedCaseDetailsData() async
+                    {
+                      var user_category = await getRef("user_category");
+
+                      if (user_category!=null)
+                      {
+                        if (user_category=="SU")
+                        {
+                          responseCasesDetailsDataJson = await getCaseDetails(widget.case_id.toString());
+                          responseCasesSupportDataJson =await getCaseSupportDetails(widget.case_id.toString());
+
+                          setState(() {
+
+                            if(responseCasesDetailsDataJson['status']=="1")
+                            {
+                                responseCasesDetailsData=responseCasesDetailsDataJson['data'];
+                                print(responseCasesDetailsData);
+                                print(responseCasesSupportDataJson);
+
+                                  if(responseCasesDetailsData['victim_name']!=null) victim_name=responseCasesDetailsData['victim_name'];
+                                  if(responseCasesDetailsData['victim_sex']!=null) victim_sex=responseCasesDetailsData['victim_sex'];
+
+                                  if(responseCasesDetailsData['victim_age']!=null) victim_age=responseCasesDetailsData['victim_age'];
+                                  if(responseCasesDetailsData['victim_phone_nid']!=null) victim_id_telephone=responseCasesDetailsData['victim_phone_nid'];
+
+                                  if(responseCasesDetailsData['victim_marital_status']!=null) victim_marital_status=responseCasesDetailsData['victim_marital_status'];
+                                  if(responseCasesDetailsData['victim_province']!=null) victim_province=responseCasesDetailsData['victim_province'];
+
+
+                                  if(responseCasesDetailsData['victim_district']!=null) victim_district=responseCasesDetailsData['victim_district'];
+                                  if(responseCasesDetailsData['victim_sector']!=null) victim_sector=responseCasesDetailsData['victim_sector'];
+
+                                  if(responseCasesDetailsData['victim_cell']!=null) victim_cell=responseCasesDetailsData['victim_cell'];
+                                  if(responseCasesDetailsData['victim_village']!=null) victim_village=responseCasesDetailsData['victim_village'];
+
+
+                                if(responseCasesDetailsData['violence_description']!=null) violence_description=responseCasesDetailsData['violence_description'];
+                                if(responseCasesDetailsData['violence_type']!=null) violence_type=responseCasesDetailsData['violence_type'];
+
+
+
+                                if(responseCasesDetailsData['abuser_name']!=null) abuser_name=responseCasesDetailsData['abuser_name'];
+                                if(responseCasesDetailsData['abuser_sex']!=null) abuser_sex=responseCasesDetailsData['abuser_sex'];
+
+                                if(responseCasesDetailsData['relationship']!=null) abuser_relation=responseCasesDetailsData['relationship'];
+                                if(responseCasesDetailsData['abuser_marital_status']!=null) abuser_marital_status=responseCasesDetailsData['abuser_marital_status'];
+
+                                if(responseCasesDetailsData['abuser_age_range']!=null) abuser_age=responseCasesDetailsData['abuser_age_range'];
+                                if(responseCasesDetailsData['followup_status']!=null && responseCasesDetailsData['followup_status']=="true" ) abuser_to_police="YES";
+
+
+                                if(responseCasesDetailsData['abuser_province']!=null) abuser_province=responseCasesDetailsData['abuser_province'];
+                                if(responseCasesDetailsData['abuser_disctrict']!=null) abuser_district=responseCasesDetailsData['abuser_disctrict'];
+                                if(responseCasesDetailsData['abuser_sector']!=null) abuser_sector=responseCasesDetailsData['abuser_sector'];
+
+                                if(responseCasesDetailsData['abuser_cell']!=null) abuser_cell=responseCasesDetailsData['abuser_cell'];
+                                if(responseCasesDetailsData['abuser_village']!=null) abuser_village=responseCasesDetailsData['abuser_village'];
+
+
+                                  if(responseCasesSupportDataJson['status']=="1")
+                                      {
+                                          responseCasesSupportData=responseCasesSupportDataJson['data'];
+
+                                          if(responseCasesDetailsData['intervation_done']!=null) intervation_done=responseCasesDetailsData['intervation_done'];
+                                          if(responseCasesDetailsData['intervation_details']!=null) intervation_done_details=responseCasesDetailsData['intervation_details'];
+                                          if(responseCasesDetailsData['intervation_done_by']!=null) intervation_done_by=responseCasesDetailsData['intervation_done_by'];
+                                      }
+
+
+
+
+
+
+
+
+                            }
+                          });
+                        }
+                        else
+                        {
+
+                        }
+                      }else
+                      {
+
+                      }
+                    }
+
+
 
   List<IconButton> actionButtons(){
+
     if(widget.parentScreen != null){
       if(widget.parentScreen == ReceivedCaseScreen.id){
         return [
@@ -87,6 +215,8 @@ class _CaseScreenState extends State<CaseScreen> {
   @override
   void initState() {
     super.initState();
+
+
     if(widget.parentScreen != null){
       if(widget.parentScreen == ReceivedCaseScreen.id){
         _title = "Received Case";
@@ -101,6 +231,8 @@ class _CaseScreenState extends State<CaseScreen> {
         _title = "Archive Case";
       }
     }
+
+    ReceivedCaseDetailsData();
   }
 
   @override
@@ -168,7 +300,7 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
                           TextSpan(
-                            text: 'Muhima Ndohole',
+                            text: victim_name,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -194,7 +326,7 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
                           TextSpan(
-                            text: '700',
+                            text: victim_sex,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -219,7 +351,7 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
                           TextSpan(
-                            text: '700',
+                            text: victim_age.toString(),
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -244,7 +376,7 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
                           TextSpan(
-                            text: '700',
+                            text:  victim_id_telephone,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -267,7 +399,7 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
                           TextSpan(
-                            text: '700',
+                            text:  victim_marital_status,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -284,7 +416,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: victim_province,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -301,7 +433,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: victim_district,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -318,7 +450,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: victim_sector,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -335,7 +467,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: victim_cell,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -351,7 +483,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: victim_village,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -379,7 +511,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: violence_type,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -396,7 +528,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: violence_description,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -427,7 +559,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_name,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -443,7 +575,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_relation,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -459,7 +591,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_marital_status,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -476,7 +608,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_sex,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -493,7 +625,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_sex,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -510,7 +642,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_to_police,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -526,7 +658,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_province,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -542,7 +674,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_district,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -559,7 +691,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_sector,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -576,7 +708,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_cell,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -592,7 +724,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: abuser_village,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -620,7 +752,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: intervation_done,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -628,21 +760,6 @@ class _CaseScreenState extends State<CaseScreen> {
                           ),
 
 
-                          TextSpan(
-                            text: '\n    Specification                   : ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                              fontSize: 16,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '700',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 14,
-                            ),
-                          ),
 
 
                           TextSpan(
@@ -654,7 +771,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: intervation_done_by,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
@@ -671,7 +788,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '700',
+                            text: intervation_done_details,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
