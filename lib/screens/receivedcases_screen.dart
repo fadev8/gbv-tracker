@@ -7,6 +7,8 @@ import 'package:gbv_tracker/widgets/logout_button.dart';
 import 'package:gbv_tracker/widgets/rounded_button.dart';
 
 import 'login_screen.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class ReceivedCaseScreen extends StatefulWidget {
   static String id = 'received-cases-screen';
@@ -73,12 +75,75 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
 
+
+  ReceivedCaseData() async
+  {
+    var user_category = await getRef("user_category");
+
+    if (user_category!=null)
+    {
+      if (user_category=="SU")
+      {
+        receivedCasesListJson = await getReceivedCaseList();
+        setState(() {
+
+          if(receivedCasesListJson['status']=="1")
+          {
+            receivedCasesList=receivedCasesListJson['data'];
+            print(receivedCasesList);
+          }
+        });
+
+
+
+
+      }
+      else
+      {
+
+      }
+    }else
+    {
+
+    }
+  }
+
+  void populateDataRows(){
+    for(int i = 0; i <15; i++){
+      DataRow row = DataRow(
+        onSelectChanged: (x){
+          if(x){
+            print('Selected index');
+          }
+
+        },
+        cells: [
+          DataCell(Text('099013$i\'43')),
+          DataCell(Text('099013$i\'43')),
+          DataCell(Text('099013$i\'43')),
+          DataCell(Text('099013$i\'43')),
+          DataCell(IconButton(
+            icon: Icon(Icons.calendar_view_day),
+            onPressed: (){
+              setState(() {
+                print('action');
+              });
+            },
+          ))
+        ]
+      );
+
+      dataRows.add(row);
+    }
+  }
+
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
         context: context,
         initialDate: _date,
         firstDate: DateTime(1950),
         lastDate: DateTime(2100));
+
 
     if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
@@ -89,6 +154,10 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   @override
   void initState() {
     super.initState();
+
+//    populateDataRows();
+    ReceivedCaseData();
+
   }
 
   @override
@@ -228,26 +297,83 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
               scrollDirection: Axis.horizontal,
               child: DataTable(
                 columns: [
-                  DataColumn(label: (Text('Phone Used to report'))),
-                  DataColumn(label: (Text('Victim\'s name'))),
-                  DataColumn(label: (Text('Description'))),
-                  DataColumn(label: (Text('Date'))),
+
+                  DataColumn(
+                      label: (Text('Channel'))
+                  ),
+                  DataColumn(
+                    label: (Text('GBV Type'))
+                  ),
+                  DataColumn(
+                      label: (Text('Victim\'s name'))
+                  ),
+                  DataColumn(
+                      label: (Text('Victim\'s sex'))
+                  ),
+                  DataColumn(
+                      label: (Text('Date'))
+                  ),
+                  DataColumn(
+                      label: (Text('Action'))
+                  ),
                 ],
-                rows: cases.map((cas) => DataRow(
-                  onSelectChanged: (b){
+                rows:receivedCasesList.map(((element) => DataRow(
+//                  onSelectChanged: (x){
+//
+//
+//
+//                    if(x){
+//
+//                      print('Selected index');
+//                    }
+//
+//                  },
+
+                    onSelectChanged: (b){
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context){
-                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: cas,);
+                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: element,);
                       }
                     ));
                   },
-                  cells: [
-                    DataCell(Text('${cas.victimPhoneNid}')),
-                    DataCell(Text('${cas.names}')),
-                    DataCell(Text('${cas.violenceDescription}')),
-                    DataCell(Text('${cas.receivedDate}')),
+                  cells: <DataCell>[
+                    DataCell(Text(element["channel"])),
+                    DataCell(Text(element["violence_type"])),
+                    DataCell(Text(element["names"])),
+                    DataCell(Text(element["victim_sex"])),
+                    DataCell(Text(element["received_date"])),
+                    DataCell(IconButton(
+                      icon: Icon(Icons.calendar_view_day),
+                      onPressed: (){
+                        setState(() {
+                          print('action');
+                        });
+                      },
+                    ))
                   ],
-                )).toList(),
+                )),).toList()
+
+//                  DataColumn(label: (Text('Phone Used to report'))),
+//                  DataColumn(label: (Text('Victim\'s name'))),
+//                  DataColumn(label: (Text('Description'))),
+//                  DataColumn(label: (Text('Date'))),
+//                ],
+//                rows: cases.map((cas) => DataRow(
+//                  onSelectChanged: (b){
+//                    Navigator.push(context, MaterialPageRoute(
+//                      builder: (context){
+//                        return CaseScreen(parentScreen: ReceivedCaseScreen.id,actualCase: cas,);
+//                      }
+//                    ));
+//                  },
+//                  cells: [
+//                    DataCell(Text('${cas.victimPhoneNid}')),
+//                    DataCell(Text('${cas.names}')),
+//                    DataCell(Text('${cas.violenceDescription}')),
+//                    DataCell(Text('${cas.receivedDate}')),
+//                  ],
+//                )).toList(),
+
               ),
             ),
           ],

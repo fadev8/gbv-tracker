@@ -136,7 +136,7 @@ class CasesOverviewPage extends StatelessWidget {
             ),
             OverviewDataTile(
               periodName: 'This Month',
-              casesNumber: receivedLast7days,
+              casesNumber: receivedMonth,
               casesType: 'Received cases',
               icon: Icons.calendar_today,
               iconColor: Colors.orangeAccent,
