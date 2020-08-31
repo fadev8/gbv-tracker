@@ -39,7 +39,6 @@ class PWDResetCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    alignment: Alignment.centerLeft,
                     width: buttonWidth ?? 100,
                     child: RoundedButton(
                       padding: 0,

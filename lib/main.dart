@@ -5,6 +5,8 @@ import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/forgetten_password_screen.dart';
+import 'package:gbv_tracker/screens/forms/add_reaction_screen.dart';
+import 'package:gbv_tracker/screens/forms/edit_case_scren.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';

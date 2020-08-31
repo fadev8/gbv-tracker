@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/widgets/figure_data_tile.dart';
 import 'package:gbv_tracker/widgets/overview_data_tile.dart';
+import 'package:gbv_tracker/widgets/rounded_button.dart';
 
 class CasesOverviewPage extends StatelessWidget {
   //TODO here are values to be filled up from the API
@@ -34,75 +35,82 @@ class CasesOverviewPage extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.all(9).copyWith(bottom: 24),
       children: [
-        Wrap(
-          spacing: 6,
+
+        ExpansionTile(
+          leading: Icon(Icons.filter_list),
+          title: Text('Filter'),
           children: [
-            DropdownButton(
-              onChanged: (index) {
-                //TODO action when the menu is tapped
-                print('selected index $index');
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
+            Wrap(
+              spacing: 6,
+              children: [
+                DropdownButton(
+                  onChanged: (index) {
+                    //TODO action when the menu is tapped
+                    print('selected index $index');
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                  ],
                 ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
+                DropdownButton(
+                  focusColor: Colors.grey,
+                  onChanged: (index) {
+                    //TODO action when the menu is tapped
+                    print('selected index $index');
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                  ],
                 ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
+                DropdownButton(
+                  onChanged: (index) {
+                    //TODO action when the menu is tapped
+                    print('selected index $index');
+                  },
+                  items: [
+                    //TODO populate the Dropdown with data
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Filter by Province'),
+                    ),
+                  ],
+                ),
+                RoundedButton(
+                  title: 'Submit',
+                  color: Colors.blueAccent,
+                  onPress: () {
+                    //TODO Submit the value of the Dropdown button
+                  },
                 ),
               ],
             ),
-            DropdownButton(
-              focusColor: Colors.grey,
-              onChanged: (index) {
-                //TODO action when the menu is tapped
-                print('selected index $index');
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-              ],
-            ),
-            DropdownButton(
-              onChanged: (index) {
-                //TODO action when the menu is tapped
-                print('selected index $index');
-              },
-              items: [
-                //TODO populate the Dropdown with data
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-                DropdownMenuItem(
-                  child: Text('Filter by Province'),
-                ),
-              ],
-            ),
-            FlatButton(
-              child: Text('Submit', style: kButtonTextStyle),
-              color: Colors.blueAccent,
-              onPressed: () {
-                //TODO Submit the value of the Dropdown button
-              },
+            SizedBox(
+              height: 16,
             ),
           ],
-        ),
-        SizedBox(
-          height: 16,
         ),
         Column(
           children: [

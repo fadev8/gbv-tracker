@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/widgets/figure_data_tile.dart';
+import 'package:gbv_tracker/widgets/rounded_button.dart';
 
 class FigurePage extends StatefulWidget {
 
@@ -47,73 +48,79 @@ class _FigurePageState extends State<FigurePage> {
       padding: EdgeInsets.all(10),
       children: [
         //Button area
-        Column(
+        ExpansionTile(
+          title: Text('Filter'),
+          leading: Icon(Icons.filter_list),
           children: [
-            Wrap(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Wrap(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FlatButton(
-                      color: Colors.grey,
-                      child: Text('From'),
-                      onPressed: () async{
-                        fromDate = await initDatePicker();
-                        setState(() {
-                        });
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FlatButton(
+                          color: Colors.grey,
+                          child: Text('From'),
+                          onPressed: () async{
+                            fromDate = await initDatePicker();
+                            setState(() {
+                            });
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            fromDate ?? '',
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        fromDate ?? '',
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FlatButton(
+                          color: Colors.grey,
+                          padding: EdgeInsets.all(0),
+                          child: Text('To'),
+                          onPressed: ()async{
+                            toDate = await initDatePicker();
+                            setState(() {
+                            });
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            toDate ?? '',
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    FlatButton(
-                      color: Colors.grey,
-                      padding: EdgeInsets.all(0),
-                      child: Text('To'),
-                      onPressed: ()async{
-                        toDate = await initDatePicker();
-                        setState(() {
-                        });
-                      },
-                    ),
                     Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        toDate ?? '',
+                      padding: EdgeInsets.all(10).copyWith(bottom: 0),
+                      child: RoundedButton(
+                        title: 'Submit',
+                        color: Colors.blueAccent,
+                        onPress: () {
+                          //TODO Submit the value of the Dropdown button
+                        },
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10).copyWith(bottom: 0),
-                  child: FlatButton(
-                    child: Text('Submit', style: kButtonTextStyle),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      //TODO Submit the value of the Dropdown button
-                    },
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
           ],
-        ),
-        SizedBox(
-          height: 20,
         ),
         FigureDataTile(
           title: 'All cases',

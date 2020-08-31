@@ -4,8 +4,11 @@ import 'package:gbv_tracker/screens/CaseScreen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
+import 'package:gbv_tracker/widgets/rounded_button.dart';
 
 import 'login_screen.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class ArchiveScreen extends StatefulWidget {
   static String id = 'archive-screen';
@@ -16,62 +19,38 @@ class ArchiveScreen extends StatefulWidget {
 class _ArchiveScreenState extends State<ArchiveScreen> {
 
   String fromDate, toDate;
-  //List<DataRow> dataRows = List();
+  String start="10",  limit ="0";
+
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
-  List<Case> cases = [
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 25,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "SONIA",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "You see"),
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 35,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "CAROL",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "Cnskjde"),
-    Case(
-        abuserAgeRange: '14-17',
-        abuserSex: 'MALE',
-        age: 29,
-        channel: "USSD",
-        districtId: 2,
-        id: 2598,
-        names: "ALIMA",
-        receivedDate: "2020-08-26",
-        status: "PENDING",
-        ussdUserId: 5155,
-        victimPhoneNid: "1199280059936114",
-        violenceType: "SEXUAL",
-        victimMaritalStatus: "MARRIED",
-        victimSector: 1,
-        victimSex: 'FEMALE',
-        violenceDescription: "You see"),
-  ];
+
+      ArchivedCaseData() async
+      {
+        var user_category = await getRef("user_category");
+
+        if (user_category!=null)
+        {
+          if (user_category=="SU")
+          {
+            archivedCasesListJson = await getArchivedCaseList(start,limit);
+            setState(() {
+
+              if(archivedCasesListJson['status']=="1")
+              {
+                archivedCasesList=archivedCasesListJson['data'];
+                print(archivedCasesList);
+              }
+            });
+          }
+          else
+          {
+
+          }
+        }else
+        {
+
+        }
+      }
 
 
   Future<String> initDatePicker() async{
@@ -87,6 +66,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   void initState() {
     super.initState();
+    ArchivedCaseData();
   }
   @override
   Widget build(BuildContext context) {
@@ -113,107 +93,114 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         body: ListView(
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
-            Wrap(
-              spacing: 4,
+            ExpansionTile(
+              title: Text('Filter'),
+              leading: Icon(Icons.filter_list),
               children: [
-                DropdownButton(
-                  onChanged: (index) {
-                    if(index != 0){
-                      setState(() {
+                Wrap(
+                  spacing: 4,
+                  children: [
+                    DropdownButton(
+                      onChanged: (index) {
+                        if(index != 0){
+                          setState(() {
+                            //TODO action when the menu is tapped
+                            print('selected index $index');
+                          });
+                        }
+                      },
+                      items: [
+                        //TODO populate the Dropdown with data
+                        DropdownMenuItem(
+                          child: Text('Select District'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('District 1'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('District 2'),
+                        ),
+                      ],
+                    ),
+                    DropdownButton(
+                      focusColor: Colors.grey,
+                      onChanged: (index) {
                         //TODO action when the menu is tapped
                         print('selected index $index');
-                      });
-                    }
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('Select District'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('District 1'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('District 2'),
-                    ),
-                  ],
-                ),
-                DropdownButton(
-                  focusColor: Colors.grey,
-                  onChanged: (index) {
-                    //TODO action when the menu is tapped
-                    print('selected index $index');
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('GBV type'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Received cases'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Followup in progress'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Wrap(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    MaterialButton(
-                      color: Colors.grey,
-                      child: Text('From :'),
-                      onPressed: () async{
-                        fromDate = await initDatePicker();
-                        setState(() {
-                        });
                       },
+                      items: [
+                        //TODO populate the Dropdown with data
+                        DropdownMenuItem(
+                          child: Text('GBV type'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Received cases'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Followup in progress'),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        fromDate ?? '',
-                      ),
+                  ],
+                ),
+                Wrap(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        MaterialButton(
+                          color: Colors.grey,
+                          child: Text('From :'),
+                          onPressed: () async{
+                            fromDate = await initDatePicker();
+                            setState(() {
+                            });
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            fromDate ?? '',
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FlatButton(
+                          color: Colors.grey,
+                          padding: EdgeInsets.all(0),
+                          child: Text('To :'),
+                          onPressed: ()async{
+                            toDate = await initDatePicker();
+                            setState(() {
+                            });
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            toDate ?? '',
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    FlatButton(
-                      color: Colors.grey,
-                      padding: EdgeInsets.all(0),
-                      child: Text('To :'),
-                      onPressed: ()async{
-                        toDate = await initDatePicker();
-                        setState(() {
-                        });
+                    RoundedButton(
+                      title: 'Preview',
+                      onPress: (){
+                        //TODO : Submit Archive Filtering data
                       },
+                      color: Colors.blueAccent,
                     ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        toDate ?? '',
-                      ),
-                    ),
+
                   ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatButton(
-                  child: Text('Submit', style: kButtonTextStyle),
-                  color: Colors.blueAccent,
-                  onPressed: () {
-                    //TODO Submit the value of the Dropdown button
-                  },
                 ),
               ],
             ),
@@ -222,10 +209,16 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
               child: DataTable(
                 columns: [
                   DataColumn(
+                      label: (Text('Channel'))
+                  ),
+                  DataColumn(
                       label: (Text('Phone Used to report'))
                   ),
                   DataColumn(
                       label: (Text('Victim\'s name'))
+                  ),
+                  DataColumn(
+                      label: (Text('Violence Type'))
                   ),
                   DataColumn(
                       label: (Text('Description'))
@@ -235,21 +228,23 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   ),
 
                 ],
-                rows:cases.map((cas) => DataRow(
-                  onSelectChanged: (b){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context){
-                          return CaseScreen(parentScreen: ArchiveScreen.id,case_id: 1,);
-                        }
-                    ));
-                  },
-                  cells: [
-                    DataCell(Text('${cas.victimPhoneNid}')),
-                    DataCell(Text('${cas.names}')),
-                    DataCell(Text('${cas.violenceDescription}')),
-                    DataCell(Text('${cas.receivedDate}')),
-                  ],
-                )).toList(),
+                  rows:archivedCasesList.map(((element) => DataRow(
+                    onSelectChanged: (b){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context){
+                            return CaseScreen(parentScreen: ArchiveScreen.id,case_id: element["case_id"],);
+                          }
+                      ));
+                    },
+                    cells: <DataCell>[
+                      DataCell(Text(element["channel"])),
+                      DataCell(Text(element["telephone_used_to_report"])),
+                      DataCell(Text(element["victim_name"])),
+                      DataCell(Text(element["violence_type"])),
+                      DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),
+                      DataCell(Text(element["received_date"])),
+                    ],
+                  )),).toList()
               ),
             ),
           ],

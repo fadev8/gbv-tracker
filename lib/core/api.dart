@@ -31,6 +31,19 @@ Map<String, dynamic> receivedCasesListJson ;
 List<dynamic> receivedCasesList=[];
 
 
+Map<String, dynamic> supportedCasesListJson ;
+List<dynamic> supportedCasesList=[];
+
+
+
+Map<String, dynamic> archivedCasesListJson ;
+List<dynamic> archivedCasesList=[];
+
+
+Map<String, dynamic> deletedCasesListJson ;
+List<dynamic> deletedCasesList=[];
+
+
 // Case Card Data Collection
 
 Map<String, dynamic> responseCasesDetailsDataJson ;
@@ -65,17 +78,17 @@ getHeaders() async{
 
       }
 
-getDefaultAdminCaseFigure() async {
-  var resp = await http.post(BASE_URL+"caseoverview",
-      body: {
+        getDefaultAdminCaseFigure() async {
+          var resp = await http.post(BASE_URL+"caseoverview",
+              body: {
 
-        'action': "get-Cases-Figures-Admin",
-      });
+                'action': "get-Cases-Figures-Admin",
+              });
 
-  var jsonResponse = convert.jsonDecode(resp.body);
-  return jsonResponse;
+          var jsonResponse = convert.jsonDecode(resp.body);
+          return jsonResponse;
 
-}
+        }
 
 
     getAllCases() async {
@@ -105,6 +118,49 @@ getDefaultAdminCaseFigure() async {
               return jsonResponse;
 
             }
+
+              getSupportedCaseList(String start, String limit)  async {
+                var resp = await http.post(BASE_URL+"claims",
+                    body: {
+
+                      'action': "get-Supported-Case-Admin",
+                      'start':start,
+                      'limit': limit,
+                    });
+
+                var jsonResponse = convert.jsonDecode(resp.body);
+                return jsonResponse;
+
+              }
+
+              getArchivedCaseList(String start, String limit)  async {
+                var resp = await http.post(BASE_URL+"claims",
+                    body: {
+              
+                      'action': "get-Archived-Case-Admin",
+                      'start':start,
+                      'limit': limit,
+                    });
+              
+                var jsonResponse = convert.jsonDecode(resp.body);
+                return jsonResponse;
+              
+              }
+
+
+              getDeletedCaseList(String start, String limit)  async {
+                var resp = await http.post(BASE_URL+"claims",
+                    body: {
+
+                      'action': "get-Deleted-Case-Admin",
+                      'start':start,
+                      'limit': limit,
+                    });
+
+                var jsonResponse = convert.jsonDecode(resp.body);
+                return jsonResponse;
+
+              }
 
             getCaseDetails(String case_id)  async {
               var resp = await http.post(BASE_URL+"claims",

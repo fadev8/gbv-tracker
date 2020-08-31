@@ -68,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                          psychology = responseFigureData['psychological'];
                          sexual = responseFigureData['sexual'];
                          property = responseFigureData['property'];
-                         others = responseFigureData['other'];
+                         others = responseFigureData['others'];
                        });
                       }
 
