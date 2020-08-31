@@ -45,9 +45,14 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
               Wrap(
                 children: [
                   Text('Perpetrator\'s name '),
-                  RoundedInput(
-                    onChanged: () {},
-                    hint: 'Perpetrator\'s name',
+                  TextField(
+                    onChanged: (val){
+
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Perpetrator\'s name',
+                    ),
                   ),
                 ],
               ),
@@ -59,9 +64,14 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
               Wrap(
                 children: [
                   Text('Relationship '),
-                  RoundedInput(
-                    onChanged: () {},
-                    hint: 'Relationship',
+                  TextField(
+                    onChanged: (val){
+
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Relationship',
+                    ),
                   ),
                 ],
               ),
@@ -214,9 +224,14 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
               Wrap(
                 children: [
                   Text('Perpetrator\'s cell'),
-                  RoundedInput(
-                    onChanged: () {},
-                    hint: 'Perpetrator\'s cell',
+                  TextField(
+                    onChanged: (val){
+
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Perpetrator\'s cell',
+                    ),
                   ),
                 ],
               ),
@@ -228,10 +243,16 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
               Wrap(
                 children: [
                   Text('Perpetrator\'s village'),
-                  RoundedInput(
-                    onChanged: () {},
-                    hint: 'Perpetrator\'s village',
+                  TextField(
+                    onChanged: (val){
+
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Perpetrator\'s village',
+                    ),
                   ),
+
                 ],
               ),
               SizedBox(
