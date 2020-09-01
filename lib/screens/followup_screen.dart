@@ -20,7 +20,7 @@ class FollowupScreen extends StatefulWidget {
 class _FollowupScreenState extends State<FollowupScreen> {
 
   String fromDate, toDate;
-  String start="10",  limit ="0";
+  String start="50",  limit ="0";
 
   //List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
@@ -239,7 +239,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
                     },
                     cells: <DataCell>[
                       DataCell(Text(element["channel"])),
-                      DataCell(Text(element["telephone_used_to_report"])),
+                      DataCell(Text(element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
                       DataCell(Text(element["victim_name"])),
                       DataCell(Text(element["violence_type"])),
                       DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),

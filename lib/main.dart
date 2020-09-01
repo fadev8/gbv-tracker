@@ -24,7 +24,9 @@ class GBVApp extends StatelessWidget {
         accentColor: Colors.blueAccent
       ),
       debugShowCheckedModeBanner: false,
+
       initialRoute: LoginScreen.id,
+
       routes: {
         LoginScreen.id : (context) => LoginScreen(),
         DashboardScreen.id : (context) => DashboardScreen(),

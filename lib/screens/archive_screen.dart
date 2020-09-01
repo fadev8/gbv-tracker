@@ -19,7 +19,7 @@ class ArchiveScreen extends StatefulWidget {
 class _ArchiveScreenState extends State<ArchiveScreen> {
 
   String fromDate, toDate;
-  String start="10",  limit ="0";
+  String start="50",  limit ="0";
 
   DateTime _date = DateTime.now();
   bool isRowSelected = false;
@@ -39,7 +39,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
               {
                 archivedCasesList=archivedCasesListJson['data'];
                 print(archivedCasesList);
-              }
+              } else  archivedCasesList=[];
             });
           }
           else
@@ -238,7 +238,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                     },
                     cells: <DataCell>[
                       DataCell(Text(element["channel"])),
-                      DataCell(Text(element["telephone_used_to_report"])),
+                      DataCell(Text(element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
                       DataCell(Text(element["victim_name"])),
                       DataCell(Text(element["violence_type"])),
                       DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),

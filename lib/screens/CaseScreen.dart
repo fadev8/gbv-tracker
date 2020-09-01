@@ -41,7 +41,7 @@ class _CaseScreenState extends State<CaseScreen> {
   TextEditingController archiveControler=new TextEditingController(), trashControler=new TextEditingController();
 // login  Post request
 
-  String acrhiveReason, acrhiveTrash;
+  String acrhiveReason, trashReason;
 
 
 
@@ -55,6 +55,133 @@ class _CaseScreenState extends State<CaseScreen> {
       'reason': reason,
       'status': status.toLowerCase(),
       'source': await getRef("user_category"),
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, ArchiveScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
+
+
+  DeleteCase(String reason,String status) async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "Delete-Case",
+      'record': widget.case_id.toString(),
+      'reason': reason,
+      'status': status,
+      'source': await getRef("user_category"),
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, TrashScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
+
+  RestoreCase() async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "Restore-Case",
+      'record': widget.case_id.toString(),
+
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, TrashScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
+
+
+  UnarchiveCase() async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "UnArchive-Case",
+      'record': widget.case_id.toString(),
+
     });
     print(response.statusCode);
 
@@ -310,7 +437,10 @@ class _CaseScreenState extends State<CaseScreen> {
                 ),
                 IconButton(
                   icon: Icon(FontAwesomeIcons.archive),
-                  onPressed: () {},
+                  onPressed: () {
+                    archiveCase(
+                        widget.case_id.toString(), context, archiveControler);
+                  },
                 ),
               ];
             } else if (widget.parentScreen == ArchiveScreen.id) {
@@ -1022,7 +1152,21 @@ class _CaseScreenState extends State<CaseScreen> {
                   RoundedButton(
                     title: 'Confirm',
                     onPress: () {
-                      //TODO : Delete a case here
+
+                      trashReason=trashControler.text;
+
+                      if (trashReason != '') {
+                        print(trashReason);
+                        DeleteCase(trashReason, case_status);
+//                            Navigator.pushNamed(context, DashboardScreen.id);
+////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                      } else {
+                        Toast.show("Please fill all the field and proceed",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM);
+                      }
+
                     },
                   )
                 ],
@@ -1049,7 +1193,7 @@ class _CaseScreenState extends State<CaseScreen> {
                   RoundedButton(
                     title: 'Confirm',
                     onPress: () {
-                      //TODO : Unarchive a case here
+                      UnarchiveCase();
                     },
                     color: Colors.blueAccent,
                   )
@@ -1077,7 +1221,7 @@ class _CaseScreenState extends State<CaseScreen> {
                   RoundedButton(
                     title: 'Confirm',
                     onPress: () {
-                      //TODO : Restore a case here
+                      RestoreCase();
                     },
                     color: Colors.blueAccent,
                   )

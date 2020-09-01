@@ -20,7 +20,7 @@ class TrashScreen extends StatefulWidget {
 class _TrashScreenState extends State<TrashScreen> {
 
 String fromDate, toDate;
-String start="10",  limit ="0";
+String start="50",  limit ="0";
 DateTime _date = DateTime.now();
 bool isRowSelected = false;
 
@@ -243,7 +243,7 @@ Widget build(BuildContext context) {
                   },
                   cells: <DataCell>[
                     DataCell(Text(element["channel"])),
-                    DataCell(Text(element["telephone_used_to_report"])),
+                    DataCell(Text(element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
                     DataCell(Text(element["victim_name"])),
                     DataCell(Text(element["violence_type"])),
                     DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),

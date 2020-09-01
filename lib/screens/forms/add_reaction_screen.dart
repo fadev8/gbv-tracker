@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 import 'package:gbv_tracker/widgets/rounded_button.dart';
-import 'package:gbv_tracker/widgets/rounded_input.dart';
+import 'package:toast/toast.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:sweetalert/sweetalert.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class AddReactionScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
@@ -18,8 +24,54 @@ class AddReactionScreen extends StatefulWidget {
 
 class _AddReactionScreenState extends State<AddReactionScreen> {
   //variables
-  String selectedIntervention, interventionDoneBy, interventionDescription;
-  TextEditingController controller;
+  String selectedIntervention="SELECT", interventionDoneBy="SELECT", interventionDescription;
+  TextEditingController controller = new TextEditingController();
+
+
+
+  SupportCase(String interventionDone,String interventionDoneBy,String interventionDescription) async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "Add-Suport",
+      'intervation': interventionDone,
+      'intervation_by': interventionDoneBy,
+      'service_get': interventionDescription,
+      'specification':"N/A",
+      'case_id':widget.case_id,
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, FollowupScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,59 +106,65 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
               Wrap(
                 children: [
                   Text('Intervention done'),
+
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DropdownButton(
                       onChanged: (val){
                         print(val);
+                        setState(() {
+                          selectedIntervention = val;
+                        });
                       },
+
                       items: [
                         DropdownMenuItem(
-                          child: Text('[Select]'),
+                          child: Text(selectedIntervention.toLowerCase()),
+
                         ),
                         DropdownMenuItem(
                           child: Text('Forward to RIB/RNP'),
-                          value: 'Forward to RIB/RNP',
+                          value: 'FOWARDED TO RNP/RIB',
                         ),
                         DropdownMenuItem(
                           child: Text('Host in Safe House'),
-                          value: 'Host in Safe House',
+                          value: 'HOSTED IN SAFE HOUSE',
                         ),
                         DropdownMenuItem(
                           child: Text('Psychological support'),
-                          value: 'Psychological support',
+                          value: 'PSYCHOLOGICAL SUPPORT',
                         ),
                         DropdownMenuItem(
                           child: Text('Legal support'),
-                          value: 'Legal support',
+                          value: 'LEGAL SUPPORT',
                         ),
                         DropdownMenuItem(
                           child: Text('Supported to access GBV stop center'),
-                          value: 'Supported to access GBV stop center',
+                          value: 'SUPPORTED ON STOP CENTER',
                         ),
                         DropdownMenuItem(
                           child: Text('Financial support'),
-                          value: 'Financial support',
+                          value: 'FINANCIAL SUPPORT',
                         ),
                         DropdownMenuItem(
                           child: Text('Perpetrator arrested'),
-                          value: 'Perpetrator arrested',
+                          value: 'PERPETRATOR ARRESTED',
                         ),
                         DropdownMenuItem(
                           child: Text('Forward to court'),
-                          value: 'Forward to court',
+                          value: 'FORWARDED TO COURT',
                         ),
                         DropdownMenuItem(
                           child: Text('Under ongoing investigation'),
-                          value: 'Under ongoing investigation',
+                          value: 'UNDER INVESTIGATION',
                         ),
                         DropdownMenuItem(
                           child: Text('Closed cases'),
-                          value: 'Closed cases',
+                          value: 'CLOSED CASES',
                         ),
                         DropdownMenuItem(
                           child: Text('Others'),
-                          value: 'Others',
+                          value: 'OTHERS',
                         ),
                       ],
                     ),
@@ -121,17 +179,18 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                   Text('Intervention done by'),
                   DropdownButton(
                     onChanged: (val){
+                      print(val);
                       setState(() {
                         interventionDoneBy = val;
                       });
                     },
                     items: [
                       DropdownMenuItem(
-                        child: Text('[Select]'),
+                        child: Text(interventionDoneBy.toLowerCase()),
                       ),
                       DropdownMenuItem(
                         child: Text('Partners'),
-                        value: 'Partners',
+                        value: 'PARTNERS',
                       ),
                       DropdownMenuItem(
                         child: Text('AAR'),
@@ -139,15 +198,15 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                       ),
                       DropdownMenuItem(
                         child: Text('Safeguarding'),
-                        value: 'Safeguarding',
+                        value: 'SAFEGUARDING',
                       ),
                       DropdownMenuItem(
-                        child: Text('RIB/RNP/Total B One Stop Center'),
-                        value: 'RIB/RNP/Total B One Stop Center',
+                        child: Text('RIB/RNP/One Stop Center'),
+                        value: 'RNP/RIB/ONE STOP CENTER',
                       ),
                       DropdownMenuItem(
                         child: Text('Others'),
-                        value: 'Others',
+                        value: 'OTHERS',
                       ),
                     ],
                   )
@@ -198,7 +257,20 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                   RoundedButton(
                     title: ' Save ',
                     onPress: (){
-                      //TODO : Save the reaction
+                      interventionDescription=controller.text;
+                      if (interventionDescription != '' && selectedIntervention!='SELECT' && interventionDoneBy!='SELECT') {
+                        print(interventionDescription);
+                        SupportCase( selectedIntervention, interventionDoneBy, interventionDescription);
+//                            Navigator.pushNamed(context, DashboardScreen.id);
+////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                      } else {
+                        Toast.show("Please fill all the field and proceed",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM);
+                      }
+
+
                     },
                   ),
                 ],
