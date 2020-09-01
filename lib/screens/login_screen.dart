@@ -8,6 +8,7 @@ import 'package:gbv_tracker/screens/app_info_screen.dart';
 import 'package:gbv_tracker/screens/forgetten_password_screen.dart';
 import 'package:gbv_tracker/widgets/rounded_button.dart';
 import 'package:gbv_tracker/widgets/rounded_input.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:toast/toast.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
@@ -83,128 +84,132 @@ class _LoginScreenState extends State<LoginScreen> {
 // login  Post request
 
   String username, password;
+  bool showLoader = false;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                color: Color(0xdf6ca0ba),
-                child: Hero(
-                  tag: 'banner',
-                  child: Image.asset('images/banner.jpeg'),
+        body: ModalProgressHUD(
+          inAsyncCall: showLoader,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  color: Color(0xdf6ca0ba),
+                  child: Hero(
+                    tag: 'banner',
+                    child: Image.asset('images/banner.jpeg'),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 16, top: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    child: Row(
-                      children: [
-                        Text(
-                          'App Info',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Icon(
-                          Icons.info_outline,
-                        )
-                      ],
+              Padding(
+                padding: EdgeInsets.only(right: 16, top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      child: Row(
+                        children: [
+                          Text(
+                            'App Info',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          Icon(
+                            Icons.info_outline,
+                          )
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, AppInfoScreen.id);
+                        print('Tapped info');
+                      },
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(context, AppInfoScreen.id);
-                      print('Tapped info');
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-                flex: 1,
-                child: Image(
-                  image: AssetImage('images/actiaid.png'),
-                )),
-            Expanded(
-              flex: 5,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, left: 35, right: 35, bottom: 10),
-                  child: Column(
-                    children: [
-                      RoundedInput(
-                        hint: 'Username',
-                        controller: usernameField,
-                      ),
-                      RoundedInput(
-                        hint: 'Password',
-                        controller: passwordField,
-                        obscureText: true,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      RoundedButton(
-                        minWidth: 300,
-                        onPress: () {
+              Expanded(
+                  flex: 1,
+                  child: Image(
+                    image: AssetImage('images/actiaid.png'),
+                  )),
+              Expanded(
+                flex: 5,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(top: 10, left: 35, right: 35, bottom: 10),
+                    child: Column(
+                      children: [
+                        RoundedInput(
+                          hint: 'Username',
+                          controller: usernameField,
+                        ),
+                        RoundedInput(
+                          hint: 'Password',
+                          controller: passwordField,
+                          obscureText: true,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        RoundedButton(
+                          minWidth: 300,
+                          onPress: () {
 //                          //TODO submit data
 //                          Navigator.pushNamed(context, DashboardScreen.id);
 //                          print('Login tapped');
-                          // field field validation
-                          username = usernameField.text;
-                          password = passwordField.text;
+                            // field field validation
+                            username = usernameField.text;
+                            password = passwordField.text;
 //                              showLoadingDialog();
 
-                          if (username != '' && password != '') {
-                            Login(username,password);
+                            if (username != '' && password != '') {
+                              Login(username,password);
 //                            Navigator.pushNamed(context, DashboardScreen.id);
 ////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                          } else {
-                            Toast.show("Please fill all the field and proceed",
-                                context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM);
-                          }
-                        },
-                        title: 'Login',
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      GestureDetector(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.lock_outline),
-                            Text(
-                              'Forgot password ?',
-                              style: TextStyle(color: Colors.blue),
-                            )
-                          ],
+                            } else {
+                              Toast.show("Please fill all the field and proceed",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  gravity: Toast.BOTTOM);
+                            }
+                          },
+                          title: 'Login',
                         ),
-                        onTap: () {
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.lock_outline),
+                              Text(
+                                'Forgot password ?',
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            ],
+                          ),
+                          onTap: () {
 
 //                          Navigator.pushNamed(
 //                              context, ForgottenPasswordScreen.id);
-                        },
-                      ),
-                    ],
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(),
-            )
-          ],
+              Expanded(
+                flex: 2,
+                child: Container(),
+              )
+            ],
+          ),
         ),
       ),
     );
