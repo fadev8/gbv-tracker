@@ -305,16 +305,16 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RoundedButton(
-                    title: 'Cancel',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: () {
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: ' Save ',
-                    onPress: () {
+                  FlatButton(
+                    child: Text('Save'),
+                    onPressed: () {
                       //TODO : Save the reaction
                     },
                   ),

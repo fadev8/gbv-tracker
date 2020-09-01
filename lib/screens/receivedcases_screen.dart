@@ -199,10 +199,10 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                Row(
                  mainAxisAlignment: MainAxisAlignment.end,
                  children: [
-                   RoundedButton(
-                     title:'Preview',
+                   FlatButton(
+                     child: Text('Preview'),
                      color: Colors.blueAccent,
-                     onPress: () {
+                     onPressed: () {
                        //TODO Submit the value of the Dropdown button
                      },
                    ),

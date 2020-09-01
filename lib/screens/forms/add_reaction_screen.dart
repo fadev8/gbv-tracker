@@ -247,16 +247,17 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RoundedButton(
-                    title: 'Cancel',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: (){
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: ' Save ',
-                    onPress: (){
+
+                FlatButton(
+                child: Text('Save'),
+                onPressed: (){
                       interventionDescription=controller.text;
                       if (interventionDescription != '' && selectedIntervention!='SELECT' && interventionDoneBy!='SELECT') {
                         print(interventionDescription);
@@ -271,7 +272,10 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                       }
 
 
+
+
                     },
+                  color: Colors.blueAccent,
                   ),
                 ],
               )
