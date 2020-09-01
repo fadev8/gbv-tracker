@@ -98,10 +98,10 @@ class CasesOverviewPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                RoundedButton(
-                  title: 'Submit',
+                FlatButton(
+                  child: Text('Preview'),
                   color: Colors.blueAccent,
-                  onPress: () {
+                  onPressed: () {
                     //TODO Submit the value of the Dropdown button
                   },
                 ),

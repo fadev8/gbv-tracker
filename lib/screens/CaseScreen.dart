@@ -951,16 +951,16 @@ class _CaseScreenState extends State<CaseScreen> {
                   ),
                 ),
                 actions: [
-                  RoundedButton(
-                    title: 'Cancel ',
+                  FlatButton(
+                    child: Text('Cancel '),
                     color: Colors.grey,
-                    onPress: () {
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: 'Confirm',
-                    onPress: () {
+                  FlatButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
                       acrhiveReason=archiveControler.text;
 
                       if (acrhiveReason != '') {
@@ -1012,16 +1012,16 @@ class _CaseScreenState extends State<CaseScreen> {
                   ),
                 ),
                 actions: [
-                  RoundedButton(
-                    title: 'Cancel ',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: () {
+                    onPressed: () {
                       Navigator.pop(ctx);
                     },
                   ),
-                  RoundedButton(
-                    title: 'Confirm',
-                    onPress: () {
+                  FlatButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
                       //TODO : Delete a case here
                     },
                   )
@@ -1039,16 +1039,16 @@ class _CaseScreenState extends State<CaseScreen> {
                 title: Text('Unarchive this case ?'),
                 content: Text('Do you really want to Unarchive this case?'),
                 actions: [
-                  RoundedButton(
-                    title: 'Cancel ',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: () {
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: 'Confirm',
-                    onPress: () {
+                  FlatButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
                       //TODO : Unarchive a case here
                     },
                     color: Colors.blueAccent,
@@ -1067,16 +1067,16 @@ class _CaseScreenState extends State<CaseScreen> {
                 title: Text('Restoring a case'),
                 content: Text('Do you really want to Restore this case?'),
                 actions: [
-                  RoundedButton(
-                    title: 'Cancel ',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: () {
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: 'Confirm',
-                    onPress: () {
+                  FlatButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
                       //TODO : Restore a case here
                     },
                     color: Colors.blueAccent,

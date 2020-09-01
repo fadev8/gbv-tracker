@@ -188,16 +188,16 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RoundedButton(
-                    title: 'Cancel',
+                  FlatButton(
+                    child: Text('Cancel'),
                     color: Colors.grey,
-                    onPress: (){
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  RoundedButton(
-                    title: ' Save ',
-                    onPress: (){
+                  FlatButton(
+                    child: Text('Save'),
+                    onPressed: (){
                       //TODO : Save the reaction
                     },
                   ),

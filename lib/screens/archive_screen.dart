@@ -192,12 +192,12 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    RoundedButton(
-                      title: 'Preview',
-                      onPress: (){
-                        //TODO : Submit Archive Filtering data
-                      },
+                    FlatButton(
+                      child: Text('Preview'),
                       color: Colors.blueAccent,
+                      onPressed: () {
+                        //TODO Submit the value of the Dropdown button
+                      },
                     ),
 
                   ],

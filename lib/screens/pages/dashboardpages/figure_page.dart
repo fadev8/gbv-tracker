@@ -105,10 +105,10 @@ class _FigurePageState extends State<FigurePage> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(10).copyWith(bottom: 0),
-                      child: RoundedButton(
-                        title: 'Submit',
+                      child: FlatButton(
+                        child: Text('Preview'),
                         color: Colors.blueAccent,
-                        onPress: () {
+                        onPressed: () {
                           //TODO Submit the value of the Dropdown button
                         },
                       ),
