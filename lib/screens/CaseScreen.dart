@@ -1156,7 +1156,7 @@ class _CaseScreenState extends State<CaseScreen> {
               child: Text('Confirm'),
                     onPressed: () {
 
-                      trashReason=trashControler.text;
+                        trashReason=trashControler.text;
 
                       if (trashReason != '') {
                         print(trashReason);

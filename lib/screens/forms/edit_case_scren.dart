@@ -4,6 +4,8 @@ import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 import 'package:gbv_tracker/widgets/rounded_button.dart';
 import 'package:gbv_tracker/widgets/rounded_input.dart';
+import 'package:gbv_tracker/core/api.dart';
+import 'package:gbv_tracker/core/init.dart';
 
 class EditCaseScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
@@ -16,6 +18,93 @@ class EditCaseScreen extends StatefulWidget {
 }
 
 class _EditCaseScreenState extends State<EditCaseScreen> {
+
+  String Province;
+  String District;
+  String  Sectors;
+  List data=[];
+  List Districtdata=[];
+  List Sectorsdata=[];
+
+  Future<String> ProvinceData() async
+  {
+    var user_category = await getRef("user_category");
+
+                  if (user_category!=null)
+                  {
+
+                      ProvinceListJson = await getProvince();
+                      setState(() {
+
+                        if(ProvinceListJson['status']=="1")
+                        {
+                          data=ProvinceListJson['data'];
+                          print(data);
+                        }
+
+                      });
+
+                  }else
+                  {
+
+                  }
+  }
+
+  Future<String> DistrictData(String Province) async
+  {
+      var user_category = await getRef("user_category");
+      Districtdata=[];
+      if (user_category!=null)
+      {
+
+        DistrictListJson = await getDistrict(Province);
+        setState(() {
+
+          if(DistrictListJson['status']=="1")
+          {
+                Districtdata=DistrictListJson['data'];
+                print(Districtdata);
+          }
+
+        });
+
+      }else
+      {
+
+      }
+  }
+
+        Future<String> SectorData(String District) async
+        {
+          var user_category = await getRef("user_category");
+
+          if (user_category!=null)
+          {
+
+            SectorListJson= await getSectors(District);
+            setState(() {
+
+              if(SectorListJson['status']=="1")
+              {
+                  Sectorsdata=SectorListJson['data'];
+                  print(Sectorsdata);
+              }
+
+            });
+
+          }else
+          {
+
+          }
+        }
+
+
+  @override
+  void initState() {
+    super.initState();
+    this.ProvinceData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -131,33 +220,24 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: DropdownButton(
-                      onChanged: (val) {
-                        setState(() {});
+                    child: DropdownButton<String>(
+
+                      items: data.map((item) {
+                        return new DropdownMenuItem(
+                            child: new Text(item['name']),
+                            value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+
+                          Province = newVal;
+                          DistrictData(Province);
+                        });
                       },
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('[Select]'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('SINGLE'),
-                          value: 'SINGLE',
-                        ),
-                        DropdownMenuItem(
-                          child: Text('MARRIED'),
-                          value: 'MARRIED',
-                        ),
-                        DropdownMenuItem(
-                          child: Text('DIVORCED'),
-                          value: 'DIVORCED',
-                        ),
-                        DropdownMenuItem(
-                          child: Text('OTHER'),
-                          value: 'OTHER',
-                        ),
-                      ],
+                      value: Province,
                     ),
-                  )
+                  ),
                 ],
               ),
               SizedBox(
@@ -175,15 +255,21 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: DropdownButton(
-                      onChanged: (val) {
-                        setState(() {});
-                      },
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('[Select]'),
-                        ),
+                      items:  Districtdata.map((item) {
+                        return new DropdownMenuItem(
+                          child: new Text(item['name']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
 
-                      ],
+                      onChanged: (newVal) {
+                        setState(() {
+                          District = newVal;
+                          print(District);
+                          SectorData(District);
+                        });
+                      },
+                      value: District,
                     ),
                   )
                 ],
@@ -203,15 +289,22 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: DropdownButton(
-                      onChanged: (val) {
-                        setState(() {});
-                      },
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('[Select]'),
-                        ),
+                      items:  Sectorsdata.map((item) {
+                        return new DropdownMenuItem(
+                          child: new Text(item['name']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
 
-                      ],
+                      onChanged: (newVal) {
+                        setState(() {
+
+                          Sectors = newVal;
+                          print(Sectors);
+
+                        });
+                      },
+                      value: Sectors,
                     ),
                   )
                 ],
