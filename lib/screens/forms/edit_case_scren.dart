@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
-import 'package:gbv_tracker/services/case.dart';
+import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
-import 'package:gbv_tracker/widgets/rounded_button.dart';
-import 'package:gbv_tracker/widgets/rounded_input.dart';
 import 'package:gbv_tracker/core/api.dart';
 import 'package:gbv_tracker/core/init.dart';
+import 'package:toast/toast.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:sweetalert/sweetalert.dart';
+
 
 class EditCaseScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
@@ -22,9 +25,27 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
   String Province;
   String District;
   String  Sectors;
+
+  String perpretorMaritalStatus="SELECT";
+  String victimMaritalStatus="SELECT";
+
+    //Text field Controllers
+      final TextEditingController perpretorNameField = new TextEditingController();
+      final TextEditingController perpretorReletationField = new TextEditingController();
+      final TextEditingController perpretorCellField = new TextEditingController();
+      final TextEditingController perpretorVillageField = new TextEditingController();
+
+      String perpretorName = "";
+      String perpretorReletation = "";
+      String perpretorCell = "";
+      String perpretorVillage = "";
+
+
+
   List data=[];
   List Districtdata=[];
   List Sectorsdata=[];
+
 
   Future<String> ProvinceData() async
   {
@@ -98,6 +119,58 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
           }
         }
 
+  EditCase(String perpretorName,String perpretorReletation,String perpretorMaritalStatus,String Province,String District,String Sectors ,String perpretorCell, String  perpretorVillage,String victimMaritalStatus ) async {
+
+    http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "PreviewCase",
+
+      'perp_name': perpretorName,
+      'relationship': perpretorReletation,
+      'perp_marital': perpretorMaritalStatus,
+      'victim_marital': victimMaritalStatus,
+
+      'abuser_province': Province,
+      'abuser_district': District,
+      'abuser_sector': Sectors,
+      'abuser_cell': perpretorCell,
+      'abuser_village': perpretorVillage,
+
+      'record':widget.case_id,
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+
+        Navigator.pushNamed(context, ReceivedCaseScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+  }
+
 
   @override
   void initState() {
@@ -141,7 +214,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s name',
+
                     ),
+                    controller: perpretorNameField,
                   ),
                 ],
               ),
@@ -161,6 +236,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                       border: OutlineInputBorder(),
                       hintText: 'Relationship',
                     ),
+                    controller: perpretorReletationField,
                   ),
                 ],
               ),
@@ -179,11 +255,14 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     padding: EdgeInsets.only(left: 24),
                     child: DropdownButton(
                       onChanged: (val) {
-                        setState(() {});
+                        setState(() {
+                          perpretorMaritalStatus=val;
+                          print(perpretorMaritalStatus);
+                        });
                       },
                       items: [
                         DropdownMenuItem(
-                          child: Text('[Select]'),
+                          child: Text(perpretorMaritalStatus),
                         ),
                         DropdownMenuItem(
                           child: Text('SINGLE'),
@@ -325,6 +404,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s cell',
                     ),
+                    controller: perpretorCellField,
                   ),
                 ],
               ),
@@ -344,6 +424,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s village',
                     ),
+                    controller: perpretorVillageField,
                   ),
 
                 ],
@@ -363,11 +444,16 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     padding: EdgeInsets.only(left: 24),
                     child: DropdownButton(
                       onChanged: (val) {
-                        setState(() {});
+                        setState(() {
+                          victimMaritalStatus=val;
+
+                            print(victimMaritalStatus);
+
+                        });
                       },
                       items: [
                         DropdownMenuItem(
-                          child: Text('[Select]'),
+                          child: Text(victimMaritalStatus),
                         ),
                         DropdownMenuItem(
                           child: Text('SINGLE'),
@@ -408,6 +494,24 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                   FlatButton(
                     child: Text('Save'),
                     onPressed: () {
+
+                      perpretorName=perpretorNameField.text;
+                      perpretorReletation=perpretorReletationField.text;
+                      perpretorCell=perpretorCellField.text;
+                      perpretorVillage=perpretorVillageField.text;
+                      if(perpretorName!="" && perpretorReletation!="" && perpretorCell!="" && perpretorVillage!="" && Province!="" && District!=""&& Sectors!="" && perpretorMaritalStatus!="SELECT" && victimMaritalStatus !="")
+                          {
+
+                              EditCase( perpretorName, perpretorReletation, perpretorMaritalStatus, Province, District, Sectors , perpretorCell,   perpretorVillage, victimMaritalStatus ) ;
+
+                          }
+                      else
+                        {
+                          Toast.show("Please fill all the field and proceed",
+                              context,
+                              duration: Toast.LENGTH_LONG,
+                              gravity: Toast.BOTTOM);
+                        }
                       //TODO : Save the reaction
                     },
                   ),

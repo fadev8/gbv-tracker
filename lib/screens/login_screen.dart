@@ -30,7 +30,15 @@ class _LoginScreenState extends State<LoginScreen> {
 // Login post request to the server
 
 
+  homeRedirection() async
+    {
+        var user_category = await getRef("user_category");
 
+            if (user_category!=null)
+            {
+              Navigator.pushNamed(context, DashboardScreen.id);
+            }
+    }
 
   Login(String username, String password) async {
     http.Response response = await http.post(BASE_URL + "users", body: {
@@ -85,6 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String username, password;
   bool showLoader = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    homeRedirection();
+  }
 
   @override
   Widget build(BuildContext context) {

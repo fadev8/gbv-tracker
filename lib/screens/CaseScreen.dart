@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/forms/add_reaction_screen.dart';
@@ -9,15 +8,10 @@ import 'package:gbv_tracker/screens/forms/edit_case_scren.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
-import 'package:gbv_tracker/screens/archive_screen.dart';
-import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
-
 import 'package:gbv_tracker/core/api.dart';
 import 'package:gbv_tracker/core/init.dart';
 
-import 'package:gbv_tracker/widgets/rounded_button.dart';
-import 'package:gbv_tracker/widgets/rounded_input.dart';
 import 'package:toast/toast.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -429,10 +423,14 @@ class _CaseScreenState extends State<CaseScreen> {
             } else if (widget.parentScreen == FollowupScreen.id) {
               return [
                 IconButton(
-                  icon: Icon(FontAwesomeIcons.edit, color: Colors.green),
+                  icon: Icon(
+                    FontAwesomeIcons.book,
+                    color: Colors.lightBlue,
+                  ),
                   onPressed: () {
-                    //calling the Add Reaction screen
-                    addReaction(widget.case_id.toString());
+                    //calling the Review/edit screen
+                        editCase(widget.case_id.toString());
+
                   },
                 ),
                 IconButton(
@@ -571,7 +569,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
 
                             TextSpan(
-                              text: victim_sex,
+                              text: victim_sex+widget.case_id.toString(),
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 12,

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
-import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
-import 'package:gbv_tracker/widgets/rounded_button.dart';
 import 'package:toast/toast.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
 import 'package:gbv_tracker/core/api.dart';
-import 'package:gbv_tracker/core/init.dart';
+
 
 class AddReactionScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
