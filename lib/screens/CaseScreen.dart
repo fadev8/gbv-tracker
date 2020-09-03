@@ -504,6 +504,7 @@ class _CaseScreenState extends State<CaseScreen> {
                 LogoutButton(
                   onPressed: () {
                     //TODO : logout operation here
+                    Logout() ;
                     Navigator.pushNamed(context, LoginScreen.id);
                   },
                 )

@@ -83,6 +83,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
             LogoutButton(
               onPressed: () {
                 //TODO : Logout operation here
+                Logout() ;
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
             ),
