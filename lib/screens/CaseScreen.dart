@@ -17,7 +17,6 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
 
-
 class CaseScreen extends StatefulWidget {
   final String parentScreen;
   static String id = 'single_case_screen';
@@ -26,22 +25,23 @@ class CaseScreen extends StatefulWidget {
   CaseScreen({@required this.parentScreen, @required this.case_id});
   @override
   _CaseScreenState createState() => _CaseScreenState();
-
 }
 
 class _CaseScreenState extends State<CaseScreen> {
   String _title;
-
-  TextEditingController archiveControler=new TextEditingController(), trashControler=new TextEditingController();
+  bool loadingData = false;
+  TextEditingController archiveControler = new TextEditingController(),
+      trashControler = new TextEditingController();
 // login  Post request
 
   String acrhiveReason, trashReason;
 
-
-
   // Archive
 
-  ArchiveCase(String reason,String status) async {
+  ArchiveCase(String reason, String status) async {
+    setState(() {
+      loadingData = true;
+    });
 
     http.Response response = await http.post(BASE_URL + "claims", body: {
       'action': "Archive-Case",
@@ -67,7 +67,6 @@ class _CaseScreenState extends State<CaseScreen> {
 
         // save login data
 
-
         Navigator.pushNamed(context, ArchiveScreen.id);
       } else if (responseJson['status'] == "0") {
         SweetAlert.show(context,
@@ -82,10 +81,16 @@ class _CaseScreenState extends State<CaseScreen> {
       SweetAlert.show(context,
           title: "Network Error", style: SweetAlertStyle.error);
     }
+
+    setState(() {
+      loadingData = true;
+    });
   }
 
-
-  DeleteCase(String reason,String status) async {
+  DeleteCase(String reason, String status) async {
+    setState(() {
+      loadingData = true;
+    });
 
     http.Response response = await http.post(BASE_URL + "claims", body: {
       'action': "Delete-Case",
@@ -111,7 +116,6 @@ class _CaseScreenState extends State<CaseScreen> {
 
         // save login data
 
-
         Navigator.pushNamed(context, TrashScreen.id);
       } else if (responseJson['status'] == "0") {
         SweetAlert.show(context,
@@ -126,14 +130,20 @@ class _CaseScreenState extends State<CaseScreen> {
       SweetAlert.show(context,
           title: "Network Error", style: SweetAlertStyle.error);
     }
+
+    setState(() {
+      loadingData = false;
+    });
   }
 
   RestoreCase() async {
+    setState(() {
+      loadingData = true;
+    });
 
     http.Response response = await http.post(BASE_URL + "claims", body: {
       'action': "Restore-Case",
       'record': widget.case_id.toString(),
-
     });
     print(response.statusCode);
 
@@ -151,7 +161,6 @@ class _CaseScreenState extends State<CaseScreen> {
         print(responseJson);
 
         // save login data
-
 
         Navigator.pushNamed(context, TrashScreen.id);
       } else if (responseJson['status'] == "0") {
@@ -167,15 +176,19 @@ class _CaseScreenState extends State<CaseScreen> {
       SweetAlert.show(context,
           title: "Network Error", style: SweetAlertStyle.error);
     }
+    setState(() {
+      loadingData = false;
+    });
   }
 
-
   UnarchiveCase() async {
+    setState(() {
+      loadingData = true;
+    });
 
     http.Response response = await http.post(BASE_URL + "claims", body: {
       'action': "UnArchive-Case",
       'record': widget.case_id.toString(),
-
     });
     print(response.statusCode);
 
@@ -193,7 +206,6 @@ class _CaseScreenState extends State<CaseScreen> {
         print(responseJson);
 
         // save login data
-
 
         Navigator.pushNamed(context, ArchiveScreen.id);
       } else if (responseJson['status'] == "0") {
@@ -209,6 +221,10 @@ class _CaseScreenState extends State<CaseScreen> {
       SweetAlert.show(context,
           title: "Network Error", style: SweetAlertStyle.error);
     }
+
+    setState(() {
+      loadingData = false;
+    });
   }
 
   String victim_name = "";
@@ -225,7 +241,6 @@ class _CaseScreenState extends State<CaseScreen> {
   String violence_type = "";
   String violence_description = "";
 
-
   String abuser_name = "";
   String abuser_relation = "";
   String abuser_marital_status = "";
@@ -239,27 +254,26 @@ class _CaseScreenState extends State<CaseScreen> {
   String abuser_cell = "";
   String abuser_village = "";
 
-
   String intervation_done = "";
   String intervation_done_by = "";
   String intervation_done_details = "";
 
   String case_status = "";
 
-
-  ReceivedCaseDetailsData() async
-  {
+  ReceivedCaseDetailsData() async {
+    setState(() {
+      loadingData = true;
+    });
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
       if (user_category == "SU") {
         responseCasesDetailsDataJson =
-        await getCaseDetails(widget.case_id.toString());
+            await getCaseDetails(widget.case_id.toString());
         responseCasesSupportDataJson =
-        await getCaseSupportDetails(widget.case_id.toString());
+            await getCaseSupportDetails(widget.case_id.toString());
 
         setState(() {
-
           if (responseCasesDetailsDataJson['status'] == "1") {
             responseCasesDetailsData = responseCasesDetailsDataJson['data'];
             print(responseCasesDetailsData);
@@ -274,14 +288,13 @@ class _CaseScreenState extends State<CaseScreen> {
               victim_age = responseCasesDetailsData['victim_age'];
             if (responseCasesDetailsData['victim_phone_nid'] != null)
               victim_id_telephone =
-              responseCasesDetailsData['victim_phone_nid'];
+                  responseCasesDetailsData['victim_phone_nid'];
 
             if (responseCasesDetailsData['victim_marital_status'] != null)
               victim_marital_status =
-              responseCasesDetailsData['victim_marital_status'];
+                  responseCasesDetailsData['victim_marital_status'];
             if (responseCasesDetailsData['victim_province'] != null)
               victim_province = responseCasesDetailsData['victim_province'];
-
 
             if (responseCasesDetailsData['victim_district'] != null)
               victim_district = responseCasesDetailsData['victim_district'];
@@ -293,16 +306,14 @@ class _CaseScreenState extends State<CaseScreen> {
             if (responseCasesDetailsData['victim_village'] != null)
               victim_village = responseCasesDetailsData['victim_village'];
 
-
             if (responseCasesDetailsData['violence_description'] != null)
               violence_description =
-              responseCasesDetailsData['violence_description'];
+                  responseCasesDetailsData['violence_description'];
             if (responseCasesDetailsData['violence_type'] != null)
               violence_type = responseCasesDetailsData['violence_type'];
 
             if (responseCasesDetailsData['status'] != null)
               case_status = responseCasesDetailsData['status'];
-
 
             if (responseCasesDetailsData['abuser_name'] != null)
               abuser_name = responseCasesDetailsData['abuser_name'];
@@ -313,11 +324,13 @@ class _CaseScreenState extends State<CaseScreen> {
               abuser_relation = responseCasesDetailsData['relationship'];
             if (responseCasesDetailsData['abuser_marital_status'] != null)
               abuser_marital_status =
-              responseCasesDetailsData['abuser_marital_status'];
+                  responseCasesDetailsData['abuser_marital_status'];
 
             if (responseCasesDetailsData['abuser_age_range'] != null)
               abuser_age = responseCasesDetailsData['abuser_age_range'];
-            if (responseCasesDetailsData['followup_status'] != null &&  responseCasesDetailsData['followup_status'] == "true")   abuser_to_police = "YES";
+            if (responseCasesDetailsData['followup_status'] != null &&
+                responseCasesDetailsData['followup_status'] == "true")
+              abuser_to_police = "YES";
 
             if (responseCasesDetailsData['abuser_province'] != null)
               abuser_province = responseCasesDetailsData['abuser_province'];
@@ -331,190 +344,188 @@ class _CaseScreenState extends State<CaseScreen> {
             if (responseCasesDetailsData['abuser_village'] != null)
               abuser_village = responseCasesDetailsData['abuser_village'];
 
-
             if (responseCasesSupportDataJson['status'] == "1") {
               responseCasesSupportData = responseCasesSupportDataJson['data'];
 //              print(responseCasesSupportData);
 
               if (responseCasesSupportData['intervation_done'] != null)
-                   intervation_done = responseCasesSupportData['intervation_done'];
+                intervation_done = responseCasesSupportData['intervation_done'];
               if (responseCasesSupportData['intervation_details'] != null)
-                intervation_done_details = responseCasesSupportData['intervation_details'];
+                intervation_done_details =
+                    responseCasesSupportData['intervation_details'];
               if (responseCasesSupportData['intervation_done_by'] != null)
-                     intervation_done_by =    responseCasesSupportData['intervation_done_by'];
+                intervation_done_by =
+                    responseCasesSupportData['intervation_done_by'];
             }
           }
         });
-      }
-      else {
+      } else {}
+    } else {}
+    setState(() {
+      loadingData = false;
+    });
+  }
 
-      }
-    } else {
+  List<IconButton> actionButtons() {
+    if (widget.parentScreen != null) {
+      if (widget.parentScreen == ReceivedCaseScreen.id) {
+        //========= RECEIVED CASE action buttons ============
 
+        return [
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.eye,
+              color: Colors.lightBlue,
+            ),
+            onPressed: () {
+              //========== Action for View =========
+            },
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.edit, color: Colors.green),
+            onPressed: () {
+              //calling the Add Reaction screen
+              addReaction(widget.case_id.toString());
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.book,
+              color: Colors.lightBlue,
+            ),
+            onPressed: () {
+              //calling the Review/edit screen
+              editCase(widget.case_id.toString());
+            },
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            onPressed: () {
+              //archive a case
+              archiveCase(widget.case_id.toString(), context, archiveControler);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.trash,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              //delete a case
+              deleteCase(widget.case_id.toString(), context);
+            },
+          ),
+        ];
+      } else if (widget.parentScreen == TrashScreen.id) {
+        return [
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.trashRestore,
+              color: Colors.blueAccent,
+            ),
+            onPressed: () {
+              //restore case action
+              restoreCase(widget.case_id.toString(), context);
+            },
+          ),
+        ];
+      } else if (widget.parentScreen == FollowupScreen.id) {
+        return [
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.book,
+              color: Colors.lightBlue,
+            ),
+            onPressed: () {
+              //calling the Review/edit screen
+              editCase(widget.case_id.toString());
+            },
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            onPressed: () {
+              archiveCase(widget.case_id.toString(), context, archiveControler);
+            },
+          ),
+        ];
+      } else if (widget.parentScreen == ArchiveScreen.id) {
+        //=============== ARCHIVE action buttons ============
+        return [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.eye, color: Colors.lightBlue),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.archive),
+            tooltip: 'Unarchive',
+            onPressed: () {
+              //Unarchive a case
+              unArchiveCase(widget.case_id.toString(), context);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.trash,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              deleteCase(widget.case_id.toString(), context);
+            },
+          ),
+        ];
+      }
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
 
+    if (widget.parentScreen != null) {
+      if (widget.parentScreen == ReceivedCaseScreen.id) {
+        _title = "Received Case";
+      } else if (widget.parentScreen == TrashScreen.id) {
+        _title = "Trash Case";
+      } else if (widget.parentScreen == FollowupScreen.id) {
+        _title = "Case in progress";
+      } else if (widget.parentScreen == ArchiveScreen.id) {
+        _title = "Archive Case";
+      }
+    }
 
-        List<IconButton> actionButtons() {
-          if (widget.parentScreen != null) {
-            if (widget.parentScreen == ReceivedCaseScreen.id) {
-              //========= RECEIVED CASE action buttons ============
+    ReceivedCaseDetailsData();
+  }
 
-              return [
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.eye,
-                    color: Colors.lightBlue,
-                  ),
-                  onPressed: () {
-                    //========== Action for View =========
-                  },
-                ),
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.edit, color: Colors.green),
-                  onPressed: () {
-                    //calling the Add Reaction screen
-                    addReaction(widget.case_id.toString());
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.book,
-                    color: Colors.lightBlue,
-                  ),
-                  onPressed: () {
-                    //calling the Review/edit screen
-                    editCase(widget.case_id.toString());
-                  },
-                ),
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.archive),
-                  onPressed: () {
-                    //archive a case
-                    archiveCase(
-                        widget.case_id.toString(), context, archiveControler);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.trash,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    //delete a case
-                    deleteCase(widget.case_id.toString(), context);
-                  },
-                ),
-              ];
-            } else if (widget.parentScreen == TrashScreen.id) {
-              return [
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.trashRestore,
-                    color: Colors.blueAccent,
-                  ),
-                  onPressed: () {
-                    //restore case action
-                    restoreCase(widget.case_id.toString(), context);
-                  },
-                ),
-              ];
-            } else if (widget.parentScreen == FollowupScreen.id) {
-              return [
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.book,
-                    color: Colors.lightBlue,
-                  ),
-                  onPressed: () {
-                    //calling the Review/edit screen
-                        editCase(widget.case_id.toString());
-
-                  },
-                ),
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.archive),
-                  onPressed: () {
-                    archiveCase(
-                        widget.case_id.toString(), context, archiveControler);
-                  },
-                ),
-              ];
-            } else if (widget.parentScreen == ArchiveScreen.id) {
-              //=============== ARCHIVE action buttons ============
-              return [
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.eye, color: Colors.lightBlue),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.archive),
-                  tooltip: 'Unarchive',
-                  onPressed: () {
-                    //Unarchive a case
-                    unArchiveCase(widget.case_id.toString(), context);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.trash,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    deleteCase(widget.case_id.toString(), context);
-                  },
-                ),
-              ];
-            }
-          }
-        }
-
-       @override
-        void initState() {
-          super.initState();
-
-          if (widget.parentScreen != null) {
-            if (widget.parentScreen == ReceivedCaseScreen.id) {
-              _title = "Received Case";
-            } else if (widget.parentScreen == TrashScreen.id) {
-              _title = "Trash Case";
-            } else if (widget.parentScreen == FollowupScreen.id) {
-              _title = "Case in progress";
-            } else if (widget.parentScreen == ArchiveScreen.id) {
-              _title = "Archive Case";
-            }
-          }
-
-          ReceivedCaseDetailsData();
-        }
-
-        @override
-        Widget build(BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(_title),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                  ),
-                ),
-                LogoutButton(
-                  onPressed: () {
-                    //TODO : logout operation here
-                    Navigator.pushNamed(context, LoginScreen.id);
-                  },
-                )
-              ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_title),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
             ),
-
-            body: SingleChildScrollView(
+          ),
+          LogoutButton(
+            onPressed: () {
+              //TODO : logout operation here
+              Navigator.pushNamed(context, LoginScreen.id);
+            },
+          )
+        ],
+      ),
+      body: loadingData
+          ? Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+              ),
+            )
+          : SingleChildScrollView(
               padding: EdgeInsets.all(8),
-
               child: Column(
-
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -523,25 +534,18 @@ class _CaseScreenState extends State<CaseScreen> {
                   Divider(
                     height: 1,
                   ),
-
-
                   Card(
-
                     child: ListTile(
-
-                      title: Text("* Victim Information\n",
+                      title: Text(
+                        "* Victim Information\n",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.red[600],
                           fontSize: 16,
-
                         ),
                       ),
-
-
                       subtitle: RichText(
-                        text:
-                        TextSpan(
+                        text: TextSpan(
                           text: '    Names              : ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -557,7 +561,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             //age
                             TextSpan(
                               text: '\n    Sex                    : ',
@@ -569,7 +572,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
 
                             TextSpan(
-                              text: victim_sex+widget.case_id.toString(),
+                              text: victim_sex + widget.case_id.toString(),
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 12,
@@ -584,7 +587,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 14,
                               ),
                             ),
-
 
                             TextSpan(
                               text: victim_age.toString(),
@@ -602,7 +604,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 14,
                               ),
                             ),
-
 
                             TextSpan(
                               text: victim_id_telephone,
@@ -628,7 +629,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Province            : ',
                               style: TextStyle(
@@ -644,7 +644,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 12,
                               ),
                             ),
-
 
                             TextSpan(
                               text: '\n    District               : ',
@@ -662,7 +661,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Sector                : ',
                               style: TextStyle(
@@ -678,7 +676,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 12,
                               ),
                             ),
-
 
                             TextSpan(
                               text: '\n    Cell                     : ',
@@ -712,7 +709,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             // Violence Information Section
                             TextSpan(
                               text: '\n\n* Violence Information\n',
@@ -722,7 +718,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 14,
                               ),
                             ),
-
 
                             TextSpan(
                               text: '\n    Type                : ',
@@ -740,7 +735,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Description    : ',
                               style: TextStyle(
@@ -757,7 +751,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             // Perpetrator Information Section
                             TextSpan(
                               text: '\n\n* Perpetrator Information\n',
@@ -767,7 +760,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 14,
                               ),
                             ),
-
 
                             //age
                             TextSpan(
@@ -818,7 +810,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Sex                       : ',
                               style: TextStyle(
@@ -835,7 +826,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Age interval        : ',
                               style: TextStyle(
@@ -851,7 +841,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 12,
                               ),
                             ),
-
 
                             TextSpan(
                               text: '\n    To RIB/RNP         : ',
@@ -900,7 +889,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 12,
                               ),
                             ),
-
 
                             TextSpan(
                               text: '\n    Sector                  : ',
@@ -951,7 +939,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n\n* Act!onaid support\n',
                               style: TextStyle(
@@ -977,7 +964,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Intervention done by : ',
                               style: TextStyle(
@@ -994,7 +980,6 @@ class _CaseScreenState extends State<CaseScreen> {
                               ),
                             ),
 
-
                             TextSpan(
                               text: '\n    Intervention details   : ',
                               style: TextStyle(
@@ -1010,11 +995,6 @@ class _CaseScreenState extends State<CaseScreen> {
                                 fontSize: 12,
                               ),
                             ),
-
-
-
-
-
                           ],
                         ),
                       ),
@@ -1023,232 +1003,232 @@ class _CaseScreenState extends State<CaseScreen> {
                 ],
               ),
             ),
-          );
-        }
+    );
+  }
 
+  //=================================================================
+  //         ACTION FUNCTIONS
+  //=================================================================
+  void addReaction(String case_id) {
+    //========== Function to edit Reaction to a case ==========
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AddReactionScreen(
+        case_id: case_id,
+      );
+    }));
+  }
 
-        //=================================================================
-        //         ACTION FUNCTIONS
-        //=================================================================
-        void addReaction(String case_id) {
-          //========== Function to edit Reaction to a case ==========
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return AddReactionScreen(
-              case_id: case_id,
-            );
-          }));
-        }
+  void editCase(String case_id) {
+    //======== Go to Edit case =====================
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return EditCaseScreen(
+        case_id: case_id,
+      );
+    }));
+  }
 
-        void editCase(String case_id) {
-          //======== Go to Edit case =====================
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return EditCaseScreen(
-              case_id: case_id,
-            );
-          }));
-        }
-
-        archiveCase(String case_id, BuildContext context,
-            TextEditingController controller) {
-          //========= Archive a case ==============
-          return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Confirm Archive this case ?'),
-                content: Container(
-                  child: Wrap(
-                    children: [
-                      Text(
-                        'Please Specify the reason',
-                      ),
-                      Container(
-                        child: TextField(
-                          onChanged: (value) {
-                            //TODO : take the reason value here Archive Case
-                          },
-                          maxLines: 2,
-                          controller: archiveControler,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                        ),
-                      ),
-                    ],
+  archiveCase(
+      String case_id, BuildContext context, TextEditingController controller) {
+    //========= Archive a case ==============
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Confirm Archive this case ?'),
+          content: Container(
+            child: Wrap(
+              children: [
+                Text(
+                  'Please Specify the reason',
+                ),
+                Container(
+                  child: TextField(
+                    onChanged: (value) {
+                      //TODO : take the reason value here Archive Case
+                    },
+                    maxLines: 2,
+                    controller: archiveControler,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    )),
                   ),
                 ),
-                actions: [
-                  FlatButton(
-                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                    color: Colors.grey,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-                  FlatButton(
-                    child: Text('Confirm'),
-                    onPressed: () {
-                      acrhiveReason=archiveControler.text;
-
-                      if (acrhiveReason != '') {
-                        print(acrhiveReason);
-                       ArchiveCase(acrhiveReason, case_status);
-//                            Navigator.pushNamed(context, DashboardScreen.id);
-////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                      } else {
-                        Toast.show("Please fill all the field and proceed",
-                            context,
-                            duration: Toast.LENGTH_LONG,
-                            gravity: Toast.BOTTOM);
-                      }
-                    },
-                    color: Colors.blueAccent,
-                  )
-                ],
-              );
-            },
-          );
-        }
-
-        deleteCase(String case_id, BuildContext ctx) {
-          return showDialog(
-            context: ctx,
-            builder: (ctx) {
-              return AlertDialog(
-                title: Text('Move to Trash ?'),
-                content: Container(
-                  child: Wrap(
-                    children: [
-                      Text(
-                        'Please Specify the reason',
-                      ),
-                      Container(
-                        child: TextField(
-                          onChanged: (value) {
-                            //TODO : take reason value here Trash Case
-                          },
-                          controller: trashControler,
-                          maxLines: 2,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                actions: [
-                  FlatButton(
-                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                    color: Colors.grey,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-              FlatButton(
+              ],
+            ),
+          ),
+          actions: [
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
               child: Text('Confirm'),
-                    onPressed: () {
+              onPressed: () {
+                acrhiveReason = archiveControler.text;
 
-                        trashReason=trashControler.text;
-
-                      if (trashReason != '') {
-                        print(trashReason);
-                        DeleteCase(trashReason, case_status);
+                if (acrhiveReason != '') {
+                  print(acrhiveReason);
+                  ArchiveCase(acrhiveReason, case_status);
 //                            Navigator.pushNamed(context, DashboardScreen.id);
 ////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                      } else {
-                        Toast.show("Please fill all the field and proceed",
-                            context,
-                            duration: Toast.LENGTH_LONG,
-                            gravity: Toast.BOTTOM);
-                      }
+                } else {
+                  Toast.show("Please fill all the field and proceed", context,
+                      duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                }
+              },
+              color: Colors.blueAccent,
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  deleteCase(String case_id, BuildContext ctx) {
+    return showDialog(
+      context: ctx,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Move to Trash ?'),
+          content: Container(
+            child: Wrap(
+              children: [
+                Text(
+                  'Please Specify the reason',
+                ),
+                Container(
+                  child: TextField(
+                    onChanged: (value) {
+                      //TODO : take reason value here Trash Case
+                    },
+                    controller: trashControler,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    )),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                trashReason = trashControler.text;
+
+                if (trashReason != '') {
+                  print(trashReason);
+                  DeleteCase(trashReason, case_status);
+//                            Navigator.pushNamed(context, DashboardScreen.id);
+////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                } else {
+                  Toast.show("Please fill all the field and proceed", context,
+                      duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                }
 
 //=======
 //                  FlatButton(
 //                    child: Text('Confirm'),
 //                    onPressed: () {
 //                      //TODO : Delete a case here
+              },
+              color: Colors.blueAccent,
+            )
+          ],
+        );
+      },
+    );
+  }
 
-                    },
-                color: Colors.blueAccent,
-                  )
-                ],
-              );
-            },
-          );
-        }
-
-        unArchiveCase(String case_id, BuildContext context) {
-          return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Unarchive this case ?'),
-                content: Text('Do you really want to Unarchive this case?'),
-                actions: [
-                  FlatButton(
-                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                    color: Colors.grey,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+  unArchiveCase(String case_id, BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Unarchive this case ?'),
+          content: Text('Do you really want to Unarchive this case?'),
+          actions: [
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
 
 //                  RoundedButton(
 //                    title: 'Confirm',
 //                    onPress: () {
 //                      UnarchiveCase();
 
-                  FlatButton(
-                    child: Text('Confirm'),
-                    onPressed: () {
-                      //TODO : Unarchive a case here
-                      UnarchiveCase();
+            FlatButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                //TODO : Unarchive a case here
+                UnarchiveCase();
+              },
+              color: Colors.blueAccent,
+            )
+          ],
+        );
+      },
+    );
+  }
 
-                    },
-                    color: Colors.blueAccent,
-                  )
-                ],
-              );
-            },
-          );
-        }
-
-        restoreCase(String case_id, BuildContext context) {
-          return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Restoring a case'),
-                content: Text('Do you really want to Restore this case?'),
-                actions: [
-                  FlatButton(
-                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                    color: Colors.grey,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-
-                  FlatButton(
-                    child: Text('Confirm', style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      //TODO : Restore a case here
-                      RestoreCase();
-
-                    },
-                    color: Colors.blueAccent,
-                  )
-                ],
-              );
-            },
-          );
-        }
-      }
-
-
+  restoreCase(String case_id, BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Restoring a case'),
+          content: Text('Do you really want to Restore this case?'),
+          actions: [
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                //TODO : Restore a case here
+                RestoreCase();
+              },
+              color: Colors.blueAccent,
+            )
+          ],
+        );
+      },
+    );
+  }
+}
