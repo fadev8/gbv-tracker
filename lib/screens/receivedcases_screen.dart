@@ -84,6 +84,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
             LogoutButton(
               onPressed: () {
                 //TODO : Logout operation here
+                Logout() ;
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
             ),

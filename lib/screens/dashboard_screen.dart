@@ -43,6 +43,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ongoing = 0,
       archived = 0;
 
+
+
   dashboardData() async {
     setState(() {
       loadingData = true;
@@ -138,6 +140,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               LogoutButton(
                 onPressed: () {
                   //TODO : Logout operation here
+
+                  Logout() ;
                   Navigator.popAndPushNamed(context, LoginScreen.id);
                 },
               ),

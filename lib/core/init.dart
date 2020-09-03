@@ -20,6 +20,18 @@ getRef(var key) async{
   return value;
 }
 
+Logout() async
+{
+  // remove login data
+  await removeRef("user_names");
+  await removeRef("user_category");
+  await removeRef("user_id");
+  await removeRef("user_names");
+  await removeRef("user_category");
+  await removeRef("user_district");
+  await removeRef("user_sector");
+}
+
 
 
 

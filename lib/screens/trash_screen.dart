@@ -81,6 +81,7 @@ class _TrashScreenState extends State<TrashScreen> {
             LogoutButton(
               onPressed: () {
                 //TODO : Logout operation here
+                Logout() ;
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
             ),

@@ -82,6 +82,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             LogoutButton(
               onPressed: () {
                 //TODO : Logout operation here
+                Logout() ;
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
             ),
