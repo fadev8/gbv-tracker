@@ -99,10 +99,37 @@ class CasesOverviewPage extends StatelessWidget {
                   ],
                 ),
                 FlatButton(
-                  child: Text('Preview'),
+                  child: Text('Preview', style: TextStyle(color: Colors.white),),
                   color: Colors.blueAccent,
                   onPressed: () {
-                    //TODO Submit the value of the Dropdown button
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Confirm'),
+                          content: Text('Preview cases overview?'),
+                          actions: [
+                            FlatButton(
+                              child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                              color: Colors.grey,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+
+
+                            FlatButton(
+                              child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                              onPressed: () {
+                                //TODO : Submit Archive filter datat
+
+                              },
+                              color: Colors.blueAccent,
+                            )
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ],

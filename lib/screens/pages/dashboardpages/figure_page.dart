@@ -106,10 +106,37 @@ class _FigurePageState extends State<FigurePage> {
                     Container(
                       padding: EdgeInsets.all(10).copyWith(bottom: 0),
                       child: FlatButton(
-                        child: Text('Preview'),
+                        child: Text('Preview',style: TextStyle(color: Colors.white),),
                         color: Colors.blueAccent,
                         onPressed: () {
-                          //TODO Submit the value of the Dropdown button
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Confirm'),
+                                content: Text('Preview this data?'),
+                                actions: [
+                                  FlatButton(
+                                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                                    color: Colors.grey,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+
+
+                                  FlatButton(
+                                    child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                                    onPressed: () {
+                                      //TODO : Submit Figure filter data
+
+                                    },
+                                    color: Colors.blueAccent,
+                                  )
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                     ),

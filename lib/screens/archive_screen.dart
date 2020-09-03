@@ -17,47 +17,44 @@ class ArchiveScreen extends StatefulWidget {
 }
 
 class _ArchiveScreenState extends State<ArchiveScreen> {
-
   String fromDate, toDate;
-  String start="50",  limit ="0";
+  String start = "50", limit = "0";
 
   DateTime _date = DateTime.now();
-  bool isRowSelected = false;
+  bool loadingData = false;
 
-      ArchivedCaseData() async
-      {
-        var user_category = await getRef("user_category");
+  ArchivedCaseData() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
 
-        if (user_category!=null)
-        {
-          if (user_category=="SU")
-          {
-            archivedCasesListJson = await getArchivedCaseList(start,limit);
-            setState(() {
+    if (user_category != null) {
+      if (user_category == "SU") {
+        archivedCasesListJson = await getArchivedCaseList(start, limit);
+        setState(() {
+          if (archivedCasesListJson['status'] == "1") {
+            archivedCasesList = archivedCasesListJson['data'];
+            print(archivedCasesList);
+          } else
+            archivedCasesList = [];
+        });
+      } else {}
+    } else {}
 
-              if(archivedCasesListJson['status']=="1")
-              {
-                archivedCasesList=archivedCasesListJson['data'];
-                print(archivedCasesList);
-              } else  archivedCasesList=[];
-            });
-          }
-          else
-          {
+    setState(() {
+      loadingData = false;
+    });
+  }
 
-          }
-        }else
-        {
+  Future<String> initDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2100));
 
-        }
-      }
-
-
-  Future<String> initDatePicker() async{
-    DateTime pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(1950), lastDate: DateTime(2100));
-
-
-    if(pickedDate != null && pickedDate != _date){
+    if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
     }
     return _date.toString();
@@ -68,6 +65,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     super.initState();
     ArchivedCaseData();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -77,12 +75,12 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: (){
+              onPressed: () {
                 //TODO : show notifications here
               },
             ),
             LogoutButton(
-              onPressed: (){
+              onPressed: () {
                 //TODO : Logout operation here
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
@@ -102,7 +100,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   children: [
                     DropdownButton(
                       onChanged: (index) {
-                        if(index != 0){
+                        if (index != 0) {
                           setState(() {
                             //TODO action when the menu is tapped
                             print('selected index $index');
@@ -152,10 +150,9 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                         MaterialButton(
                           color: Colors.grey,
                           child: Text('From :'),
-                          onPressed: () async{
+                          onPressed: () async {
                             fromDate = await initDatePicker();
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                         ),
                         Container(
@@ -173,10 +170,9 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                           color: Colors.grey,
                           padding: EdgeInsets.all(0),
                           child: Text('To :'),
-                          onPressed: ()async{
+                          onPressed: () async {
                             toDate = await initDatePicker();
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                         ),
                         Container(
@@ -193,60 +189,94 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FlatButton(
-                      child: Text('Preview'),
+                      child: Text('Preview',style: TextStyle(color: Colors.white),),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        //TODO Submit the value of the Dropdown button
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Confirm'),
+                              content: Text('Do you want to load Archived Cases ?'),
+                              actions: [
+                                FlatButton(
+                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                                  color: Colors.grey,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+
+
+                                FlatButton(
+                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                                  onPressed: () {
+                                    //TODO : Submit Archive filter datat
+
+                                  },
+                                  color: Colors.blueAccent,
+                                )
+                              ],
+                            );
+                          },
+                        );
                       },
                     ),
-
                   ],
                 ),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(
-                      label: (Text('Channel'))
+            loadingData
+                ? Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                        columns: [
+                          DataColumn(label: (Text('Channel'))),
+                          DataColumn(label: (Text('Phone Used to report'))),
+                          DataColumn(label: (Text('Victim\'s name'))),
+                          DataColumn(label: (Text('Violence Type'))),
+                          DataColumn(label: (Text('Description'))),
+                          DataColumn(label: (Text('Date'))),
+                        ],
+                        rows: archivedCasesList
+                            .map(
+                              ((element) => DataRow(
+                                    onSelectChanged: (b) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return CaseScreen(
+                                          parentScreen: ArchiveScreen.id,
+                                          case_id: element["case_id"],
+                                        );
+                                      }));
+                                    },
+                                    cells: <DataCell>[
+                                      DataCell(Text(element["channel"])),
+                                      DataCell(Text(element[
+                                                  "telephone_used_to_report"] !=
+                                              null
+                                          ? element["telephone_used_to_report"]
+                                          : "N/A")),
+                                      DataCell(Text(element["victim_name"])),
+                                      DataCell(Text(element["violence_type"])),
+                                      DataCell(Text(
+                                          element["violence_description"] !=
+                                                  null
+                                              ? element["violence_description"]
+                                              : "N/A")),
+                                      DataCell(Text(element["received_date"])),
+                                    ],
+                                  )),
+                            )
+                            .toList()),
                   ),
-                  DataColumn(
-                      label: (Text('Phone Used to report'))
-                  ),
-                  DataColumn(
-                      label: (Text('Victim\'s name'))
-                  ),
-                  DataColumn(
-                      label: (Text('Violence Type'))
-                  ),
-                  DataColumn(
-                      label: (Text('Description'))
-                  ),
-                  DataColumn(
-                      label: (Text('Date'))
-                  ),
-
-                ],
-                  rows:archivedCasesList.map(((element) => DataRow(
-                    onSelectChanged: (b){
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context){
-                            return CaseScreen(parentScreen: ArchiveScreen.id,case_id: element["case_id"],);
-                          }
-                      ));
-                    },
-                    cells: <DataCell>[
-                      DataCell(Text(element["channel"])),
-                      DataCell(Text(element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
-                      DataCell(Text(element["victim_name"])),
-                      DataCell(Text(element["violence_type"])),
-                      DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),
-                      DataCell(Text(element["received_date"])),
-                    ],
-                  )),).toList()
-              ),
-            ),
           ],
         ),
       ),

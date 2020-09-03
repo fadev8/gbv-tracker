@@ -18,47 +18,44 @@ class FollowupScreen extends StatefulWidget {
 }
 
 class _FollowupScreenState extends State<FollowupScreen> {
-
   String fromDate, toDate;
-  String start="50",  limit ="0";
+  String start = "50", limit = "0";
 
   //List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
-  bool isRowSelected = false;
+  bool loadingData = false;
 
+  SupportedCaseData() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
 
-                  SupportedCaseData() async
-                  {
-                    var user_category = await getRef("user_category");
-                
-                    if (user_category!=null)
-                    {
-                      if (user_category=="SU")
-                      {
-                        supportedCasesListJson = await getSupportedCaseList(start,limit);
-                        setState(() {
-                
-                          if(supportedCasesListJson['status']=="1")
-                          {
-                              supportedCasesList=supportedCasesListJson['data'];
-                              print(supportedCasesList);
-                          }
-                        });
-                      }
-                      else
-                      {
-                
-                      }
-                    }else
-                    {
-                
-                    }
-                  }
-  Future<String> initDatePicker() async{
-    DateTime pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(1950), lastDate: DateTime(2100));
+    if (user_category != null) {
+      if (user_category == "SU") {
+        supportedCasesListJson = await getSupportedCaseList(start, limit);
+        setState(() {
+          if (supportedCasesListJson['status'] == "1") {
+            supportedCasesList = supportedCasesListJson['data'];
+            print(supportedCasesList);
+          }
+        });
+      } else {}
+    } else {}
 
+    setState(() {
+      loadingData = false;
+    });
+  }
 
-    if(pickedDate != null && pickedDate != _date){
+  Future<String> initDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2100));
+
+    if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
     }
     return _date.toString();
@@ -69,6 +66,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
     super.initState();
     SupportedCaseData();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,12 +76,12 @@ class _FollowupScreenState extends State<FollowupScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: (){
+              onPressed: () {
                 //TODO : show notifications here
               },
             ),
             LogoutButton(
-              onPressed: (){
+              onPressed: () {
                 //TODO : Logout operation here
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
@@ -103,7 +101,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
                   children: [
                     DropdownButton(
                       onChanged: (index) {
-                        if(index != 0){
+                        if (index != 0) {
                           setState(() {
                             //TODO action when the menu is tapped
                             print('selected index $index');
@@ -153,10 +151,9 @@ class _FollowupScreenState extends State<FollowupScreen> {
                         MaterialButton(
                           color: Colors.grey,
                           child: Text('From :'),
-                          onPressed: () async{
+                          onPressed: () async {
                             fromDate = await initDatePicker();
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                         ),
                         Container(
@@ -174,10 +171,9 @@ class _FollowupScreenState extends State<FollowupScreen> {
                           color: Colors.grey,
                           padding: EdgeInsets.all(0),
                           child: Text('To :'),
-                          onPressed: ()async{
+                          onPressed: () async {
                             toDate = await initDatePicker();
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                         ),
                         Container(
@@ -194,60 +190,94 @@ class _FollowupScreenState extends State<FollowupScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FlatButton(
-                      child:Text('Preview'),
+                      child: Text('Preview', style: TextStyle(color: Colors.white),),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        //TODO Submit the value of the Dropdown button
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Confirm'),
+                              content: Text('Do you want to view Cases in Progress?'),
+                              actions: [
+                                FlatButton(
+                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                                  color: Colors.grey,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+
+
+                                FlatButton(
+                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                                  onPressed: () {
+                                    //TODO : Submit Followup filter data
+
+                                  },
+                                  color: Colors.blueAccent,
+                                )
+                              ],
+                            );
+                          },
+                        );
                       },
                     ),
                   ],
                 ),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-
-                  DataColumn(
-                      label: (Text('Channel'))
+            loadingData
+                ? Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                        columns: [
+                          DataColumn(label: (Text('Channel'))),
+                          DataColumn(label: (Text('Phone Used to report'))),
+                          DataColumn(label: (Text('Victim\'s name'))),
+                          DataColumn(label: (Text('Violence Type'))),
+                          DataColumn(label: (Text('Description'))),
+                          DataColumn(label: (Text('Date'))),
+                        ],
+                        rows: supportedCasesList
+                            .map(
+                              ((element) => DataRow(
+                                    onSelectChanged: (b) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return CaseScreen(
+                                          parentScreen: FollowupScreen.id,
+                                          case_id: element["case_id"],
+                                        );
+                                      }));
+                                    },
+                                    cells: <DataCell>[
+                                      DataCell(Text(element["channel"])),
+                                      DataCell(Text(element[
+                                                  "telephone_used_to_report"] !=
+                                              null
+                                          ? element["telephone_used_to_report"]
+                                          : "N/A")),
+                                      DataCell(Text(element["victim_name"])),
+                                      DataCell(Text(element["violence_type"])),
+                                      DataCell(Text(
+                                          element["violence_description"] !=
+                                                  null
+                                              ? element["violence_description"]
+                                              : "N/A")),
+                                      DataCell(Text(element["received_date"])),
+                                    ],
+                                  )),
+                            )
+                            .toList()),
                   ),
-                  DataColumn(
-                      label: (Text('Phone Used to report'))
-                  ),
-                  DataColumn(
-                      label: (Text('Victim\'s name'))
-                  ),
-                  DataColumn(
-                      label: (Text('Violence Type'))
-                  ),
-                  DataColumn(
-                      label: (Text('Description'))
-                  ),
-                  DataColumn(
-                      label: (Text('Date'))
-                  ),
-
-                ],
-                  rows:supportedCasesList.map(((element) => DataRow(
-                    onSelectChanged: (b){
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context){
-                            return CaseScreen(parentScreen: FollowupScreen.id,case_id: element["case_id"],);
-                          }
-                      ));
-                    },
-                    cells: <DataCell>[
-                      DataCell(Text(element["channel"])),
-                      DataCell(Text(element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
-                      DataCell(Text(element["victim_name"])),
-                      DataCell(Text(element["violence_type"])),
-                      DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),
-                      DataCell(Text(element["received_date"])),
-                    ],
-                  )),).toList()
-              ),
-            ),
           ],
         ),
       ),

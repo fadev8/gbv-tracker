@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,8 @@ import 'dart:core';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
+bool showLoader = false;
+
 class LoginScreen extends StatefulWidget {
   static String id = 'login-screen';
   @override
@@ -33,10 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   Login(String username, String password) async {
+    setState(() {
+      //show the Loader
+      showLoader = true;
+    });
     http.Response response = await http.post(BASE_URL + "users", body: {
       'action': "user-Login",
       'username': username,
       'password': password,
+    });
+
+    //close the spinner
+    setState(() {
+      showLoader = false;
     });
 
     //check http code
@@ -74,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
       SweetAlert.show(context,
           title: "Network Error", style: SweetAlertStyle.error);
     }
+
+
   }
 
 
@@ -84,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // login  Post request
 
   String username, password;
-  bool showLoader = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,16 +175,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPress: () {
 //                          //TODO submit data
 //                          Navigator.pushNamed(context, DashboardScreen.id);
-//                          print('Login tapped');
+
+
                             // field field validation
                             username = usernameField.text;
                             password = passwordField.text;
 //                              showLoadingDialog();
 
                             if (username != '' && password != '') {
+                              //login operation here
                               Login(username,password);
-//                            Navigator.pushNamed(context, DashboardScreen.id);
-////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+
+
                             } else {
                               Toast.show("Please fill all the field and proceed",
                                   context,

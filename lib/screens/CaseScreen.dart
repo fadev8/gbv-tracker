@@ -1082,12 +1082,13 @@ class _CaseScreenState extends State<CaseScreen> {
                 ),
                 actions: [
                   FlatButton(
-                    child: Text('Cancel '),
+                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
                     color: Colors.grey,
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
+
                   FlatButton(
                     child: Text('Confirm'),
                     onPressed: () {
@@ -1143,13 +1144,11 @@ class _CaseScreenState extends State<CaseScreen> {
                 ),
                 actions: [
                   FlatButton(
-                    child: Text('Cancel'),
-
+                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
                     color: Colors.grey,
                     onPressed: () {
-                      Navigator.pop(ctx);
+                      Navigator.pop(context);
                     },
-
                   ),
 
               FlatButton(
@@ -1194,7 +1193,7 @@ class _CaseScreenState extends State<CaseScreen> {
                 content: Text('Do you really want to Unarchive this case?'),
                 actions: [
                   FlatButton(
-                    child: Text('Cancel'),
+                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
                     color: Colors.grey,
                     onPressed: () {
                       Navigator.pop(context);
@@ -1230,20 +1229,16 @@ class _CaseScreenState extends State<CaseScreen> {
                 content: Text('Do you really want to Restore this case?'),
                 actions: [
                   FlatButton(
-                    child: Text('Cancel'),
+                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
                     color: Colors.grey,
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
 
-//                  RoundedButton(
-//                    title: 'Confirm',
-//                    onPress: () {
-//                      RestoreCase();
 
                   FlatButton(
-                    child: Text('Confirm'),
+                    child: Text('Confirm', style: TextStyle(color: Colors.white),),
                     onPressed: () {
                       //TODO : Restore a case here
                       RestoreCase();

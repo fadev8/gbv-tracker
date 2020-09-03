@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
@@ -46,10 +48,11 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                 children: [
                   Text('Perpetrator\'s name '),
                   TextField(
+                    maxLines: 1,
                     onChanged: (val){
-
                     },
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(1),
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s name',
                     ),
@@ -69,6 +72,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
 
                     },
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(1),
                       border: OutlineInputBorder(),
                       hintText: 'Relationship',
                     ),
@@ -87,8 +91,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     child: Text('Marital Status (Perpetrator)'),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 24),
+                    padding: EdgeInsets.only(left: 8,right: 8),
                     child: DropdownButton(
+                      isExpanded: true,
                       onChanged: (val) {
                         setState(() {});
                       },
@@ -130,8 +135,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                   ),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.only(left: 8,right: 8),
                     child: DropdownButton(
+                      isExpanded: true,
                       onChanged: (val) {
                         setState(() {});
                       },
@@ -173,8 +179,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                   ),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.only(left: 8,right: 8),
                     child: DropdownButton(
+                      isExpanded: true,
                       onChanged: (val) {
                         setState(() {});
                       },
@@ -201,8 +208,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                   ),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.only(left: 8,right: 8),
                     child: DropdownButton(
+                      isExpanded: true,
                       onChanged: (val) {
                         setState(() {});
                       },
@@ -229,6 +237,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
 
                     },
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(1),
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s cell',
                     ),
@@ -248,6 +257,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
 
                     },
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(1),
                       border: OutlineInputBorder(),
                       hintText: 'Perpetrator\'s village',
                     ),
@@ -267,8 +277,10 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                     child: Text('Marital Status (Victim)'),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 24),
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     child: DropdownButton(
+                      isExpanded: true,
                       onChanged: (val) {
                         setState(() {});
                       },
@@ -306,14 +318,16 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   FlatButton(
-                    child: Text('Cancel'),
+                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
                     color: Colors.grey,
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
+
                   FlatButton(
-                    child: Text('Save'),
+                    child: Text('Save', style: TextStyle(color: Colors.white),),
+                    color: Colors.blueAccent,
                     onPressed: () {
                       //TODO : Save the reaction
                     },

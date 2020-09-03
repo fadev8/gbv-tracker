@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/screens/CaseScreen.dart';
 import 'package:gbv_tracker/services/case.dart';
@@ -18,42 +19,34 @@ class ReceivedCaseScreen extends StatefulWidget {
 
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   String fromDate, toDate;
-  String start="50",  limit ="0";
+  String start = "50", limit = "0";
   List<DataRow> dataRows = List();
 
   DateTime _date = DateTime.now();
-  bool isRowSelected = false;
+  bool loadingData = false;
 
+  ReceivedCaseData() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
 
-                        ReceivedCaseData() async
-                        {
-                          var user_category = await getRef("user_category");
+    if (user_category != null) {
+      if (user_category == "SU") {
+        receivedCasesListJson = await getReceivedCaseList(start, limit);
+        setState(() {
+          if (receivedCasesListJson['status'] == "1") {
+            receivedCasesList = receivedCasesListJson['data'];
+            print(receivedCasesList);
+          }
+        });
+      } else {}
+    } else {}
 
-                          if (user_category!=null)
-                          {
-                            if (user_category=="SU")
-                            {
-                              receivedCasesListJson = await getReceivedCaseList(start,limit);
-                              setState(() {
-
-                                    if(receivedCasesListJson['status']=="1")
-                                    {
-                                          receivedCasesList=receivedCasesListJson['data'];
-                                          print(receivedCasesList);
-                                    }
-                              });
-                            }
-                            else
-                            {
-
-                            }
-                          }else
-                          {
-
-                          }
-                        }
-
-
+    setState(() {
+      loadingData = false;
+    });
+  }
 
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
@@ -61,7 +54,6 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         initialDate: _date,
         firstDate: DateTime(1950),
         lastDate: DateTime(2100));
-
 
     if (pickedDate != null && pickedDate != _date) {
       _date = pickedDate;
@@ -74,7 +66,6 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     super.initState();
 
     ReceivedCaseData();
-
   }
 
   @override
@@ -102,155 +93,191 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         body: ListView(
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
-           ExpansionTile(
-             title: Text('Filter'),
-             leading: Icon(Icons.filter_list),
-             children: [
-               Wrap(
-                 spacing: 20,
-                 children: [
-                   DropdownButton(
-                     onChanged: (index) {
-                       if (index != 0) {
-                         setState(() {
-                           //TODO action when the menu is tapped
-                           print('selected index $index');
-                         });
-                       }
-                     },
-                     items: [
-                       //TODO populate the Dropdown with data
-                       DropdownMenuItem(
-                         child: Text('District'),
-                       ),
-                       DropdownMenuItem(
-                         child: Text('District 1'),
-                       ),
-                       DropdownMenuItem(
-                         child: Text('District 2'),
-                       ),
-                     ],
-                   ),
-                   DropdownButton(
-                     focusColor: Colors.grey,
-                     onChanged: (index) {
-                       //TODO action when the menu is tapped
-                       print('selected index $index');
-                     },
-                     items: [
-                       //TODO populate the Dropdown with data
-                       DropdownMenuItem(
-                         child: Text('GBV type'),
-                       ),
-                       DropdownMenuItem(
-                         child: Text('Received cases'),
-                       ),
-                       DropdownMenuItem(
-                         child: Text('Followup in progress'),
-                       ),
-                     ],
-                   ),
-                 ],
-               ),
-               Wrap(
-                 //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                 children: [
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.start,
-                     children: [
-                       MaterialButton(
-                         color: Colors.grey,
-                         child: Text('From :'),
-                         onPressed: () async {
-                           fromDate = await initDatePicker();
-                           setState(() {});
-                         },
-                       ),
-                       Container(
-                         padding: EdgeInsets.all(8),
-                         child: Text(
-                           fromDate ?? '',
-                         ),
-                       ),
-                     ],
-                   ),
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.start,
-                     children: [
-                       FlatButton(
-                         color: Colors.grey,
-                         padding: EdgeInsets.all(0),
-                         child: Text('To :'),
-                         onPressed: () async {
-                           toDate = await initDatePicker();
-                           setState(() {});
-                         },
-                       ),
-                       Container(
-                         padding: EdgeInsets.all(8),
-                         child: Text(
-                           toDate ?? '',
-                         ),
-                       ),
-                     ],
-                   ),
-                 ],
-               ),
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.end,
-                 children: [
-                   FlatButton(
-                     child: Text('Preview'),
-                     color: Colors.blueAccent,
-                     onPressed: () {
-                       //TODO Submit the value of the Dropdown button
-                     },
-                   ),
-                 ],
-               ),
-             ],
-           ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-
-                  DataColumn(
-                      label: (Text('Channel'))
-                  ),
-                  DataColumn(
-                    label: (Text('Phone Used to report'))
-                  ),
-                  DataColumn(
-                      label: (Text('Victim\'s name'))
-                  ),
-                  DataColumn(
-                      label: (Text('Violence Type'))
-                  ),
-                  DataColumn(
-                      label: (Text('Description'))
-                  ),
-                  DataColumn(
-                      label: (Text('Date'))
-                  ),
-                ],
-                rows:receivedCasesList.map(((element) => DataRow(
-              onSelectChanged: (b){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context){
-                          return CaseScreen(parentScreen: ReceivedCaseScreen.id,case_id: element["case_id"],);
+            ExpansionTile(
+              title: Text('Filter'),
+              leading: Icon(Icons.filter_list),
+              children: [
+                Wrap(
+                  spacing: 20,
+                  children: [
+                    DropdownButton(
+                      onChanged: (index) {
+                        if (index != 0) {
+                          setState(() {
+                            //TODO action when the menu is tapped
+                            print('selected index $index');
+                          });
                         }
-                    ));
-                  },
-                  cells: <DataCell>[
-                    DataCell(Text(element["channel"])),
-                    DataCell(Text( element["telephone_used_to_report"] != null ? element["telephone_used_to_report"] : "N/A")),
-                    DataCell(Text(element["victim_name"])),
-                    DataCell(Text(  element["violence_type"])),
-                    DataCell(Text(element["violence_description"] != null ? element["violence_description"] : "N/A")),
-                    DataCell(Text(element["received_date"])),
+                      },
+                      items: [
+                        //TODO populate the Dropdown with data
+                        DropdownMenuItem(
+                          child: Text('District'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('District 1'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('District 2'),
+                        ),
+                      ],
+                    ),
+                    DropdownButton(
+                      focusColor: Colors.grey,
+                      onChanged: (index) {
+                        //TODO action when the menu is tapped
+                        print('selected index $index');
+                      },
+                      items: [
+                        //TODO populate the Dropdown with data
+                        DropdownMenuItem(
+                          child: Text('GBV type'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Received cases'),
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Followup in progress'),
+                        ),
+                      ],
+                    ),
                   ],
-                )),).toList()
+                ),
+                Wrap(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        MaterialButton(
+                          color: Colors.grey,
+                          child: Text('From :'),
+                          onPressed: () async {
+                            fromDate = await initDatePicker();
+                            setState(() {});
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            fromDate ?? '',
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FlatButton(
+                          color: Colors.grey,
+                          padding: EdgeInsets.all(0),
+                          child: Text('To :'),
+                          onPressed: () async {
+                            toDate = await initDatePicker();
+                            setState(() {});
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            toDate ?? '',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FlatButton(
+                      child: Text('Preview',style: TextStyle(color: Colors.white),),
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Confirm'),
+                              content: Text('Do you want to view Received Cases?'),
+                              actions: [
+                                FlatButton(
+                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                                  color: Colors.grey,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+
+
+                                FlatButton(
+                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                                  onPressed: () {
+                                    //TODO : Submit Received Case filter data
+
+                                  },
+                                  color: Colors.blueAccent,
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            loadingData
+                ? Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                        columns: [
+                          DataColumn(label: (Text('Channel'))),
+                          DataColumn(label: (Text('Phone Used to report'))),
+                          DataColumn(label: (Text('Victim\'s name'))),
+                          DataColumn(label: (Text('Violence Type'))),
+                          DataColumn(label: (Text('Description'))),
+                          DataColumn(label: (Text('Date'))),
+                        ],
+                        rows: receivedCasesList
+                            .map(
+                              ((element) => DataRow(
+                                    onSelectChanged: (b) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return CaseScreen(
+                                          parentScreen: ReceivedCaseScreen.id,
+                                          case_id: element["case_id"],
+                                        );
+                                      }));
+                                    },
+                                    cells: <DataCell>[
+                                      DataCell(Text(element["channel"])),
+                                      DataCell(Text(element[
+                                                  "telephone_used_to_report"] !=
+                                              null
+                                          ? element["telephone_used_to_report"]
+                                          : "N/A")),
+                                      DataCell(Text(element["victim_name"])),
+                                      DataCell(Text(element["violence_type"])),
+                                      DataCell(Text(
+                                          element["violence_description"] !=
+                                                  null
+                                              ? element["violence_description"]
+                                              : "N/A")),
+                                      DataCell(Text(element["received_date"])),
+                                    ],
+                                  )),
+                            )
+                            .toList()
 
 //                  DataColumn(label: (Text('Phone Used to report'))),
 //                  DataColumn(label: (Text('Victim\'s name'))),
@@ -273,8 +300,8 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
 //                  ],
 //                )).toList(),
 
-              ),
-            ),
+                        ),
+                  ),
           ],
         ),
       ),
