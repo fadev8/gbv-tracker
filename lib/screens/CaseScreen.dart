@@ -505,54 +505,13 @@ class _CaseScreenState extends State<CaseScreen> {
           IconButton(
             icon: Icon(
               Icons.notifications,
-              color: Colors.white,),),
-    )
-
-       @override
-        void initState() {
-          super.initState();
-
-          if (widget.parentScreen != null) {
-            if (widget.parentScreen == ReceivedCaseScreen.id) {
-              _title = "Received Case";
-            } else if (widget.parentScreen == TrashScreen.id) {
-              _title = "Trash Case";
-            } else if (widget.parentScreen == FollowupScreen.id) {
-              _title = "Case in progress";
-            } else if (widget.parentScreen == ArchiveScreen.id) {
-              _title = "Archive Case";
-            }
-          }
-
-          ReceivedCaseDetailsData();
-        }
-
-        @override
-        Widget build(BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(_title),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                  ),
-                ),
-                LogoutButton(
-                  onPressed: () {
-                    //TODO : logout operation here
-                    Logout() ;
-                    Navigator.pushNamed(context, LoginScreen.id);
-                  },
-                )
-              ],
->>>>>>> d0cb3e1831e7aba6fc3f4e49bbdc10fa202fdcf4
+              color: Colors.white,
             ),
           ),
           LogoutButton(
             onPressed: () {
               //TODO : logout operation here
+              Logout();
               Navigator.pushNamed(context, LoginScreen.id);
             },
           )
