@@ -54,6 +54,14 @@ Map<String, dynamic> responseCasesSupportDataJson ;
 Map<String, dynamic> responseCasesSupportData ;
 
 
+// addressees
+
+Map<String, dynamic> ProvinceListJson ;
+Map<String, dynamic> DistrictListJson ;
+Map<String, dynamic> SectorListJson ;
+
+
+
 
 getHeaders() async{
 
@@ -188,6 +196,49 @@ getHeaders() async{
             return jsonResponse;
 
           }
+
+
+
+        getProvince()  async {
+          var resp = await http.post(BASE_URL+"address",
+              body: {
+                      'action': "getProvinces",
+
+              });
+
+          var jsonResponse = convert.jsonDecode(resp.body);
+          return jsonResponse;
+
+        }
+
+
+        getDistrict(String province)  async {
+          var resp = await http.post(BASE_URL+"address",
+              body: {
+
+                      'action': "get-Districts",
+                      'province_id': province,
+
+              });
+
+          var jsonResponse = convert.jsonDecode(resp.body);
+          return jsonResponse;
+
+        }
+
+      getSectors(String district)  async {
+        var resp = await http.post(BASE_URL+"address",
+            body: {
+
+              'action': "get-Sectors",
+              'district_id': district,
+
+            });
+
+        var jsonResponse = convert.jsonDecode(resp.body);
+        return jsonResponse;
+
+      }
 
 
 
