@@ -573,7 +573,7 @@ class _CaseScreenState extends State<CaseScreen> {
                             ),
 
                             TextSpan(
-                              text: victim_sex + widget.case_id.toString(),
+                              text: victim_sex ,
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 12,

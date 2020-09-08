@@ -51,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     var user_category = await getRef("user_category");
 
-    print("ccc" + user_category);
+//    print("ccc" + user_category);
     if (user_category != null) {
       if (user_category == "SU") {
         //get Overview data
