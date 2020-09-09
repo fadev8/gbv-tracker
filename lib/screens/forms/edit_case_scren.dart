@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 import 'package:gbv_tracker/core/api.dart';
@@ -66,9 +68,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
   }
 
   Future<String> DistrictData(String Province) async {
-    setState(() {
-      loadingData = true;
-    });
+
     var user_category = await getRef("user_category");
     Districtdata = [];
     if (user_category != null) {
@@ -80,15 +80,11 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
         }
       });
     } else {}
-    setState(() {
-      loadingData = false;
-    });
+
   }
 
   Future<String> SectorData(String District) async {
-    setState(() {
-      loadingData = true;
-    });
+
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
@@ -100,9 +96,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
         }
       });
     } else {}
-    setState(() {
-      loadingData = false;
-    });
+
   }
 
   EditCase(
@@ -187,7 +181,7 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                 color: Colors.white,
               ),
               onPressed: () {
-                //TODO : Display Notification
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(
@@ -253,8 +247,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                           child: Text('Marital Status (Perpetrator)'),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 24),
+                          width: double.infinity,
                           child: DropdownButton(
+                            isExpanded: true,
                             onChanged: (val) {
                               setState(() {
                                 perpretorMaritalStatus = val;
@@ -299,8 +294,8 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                         ),
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 24),
                           child: DropdownButton<String>(
+                            isExpanded: true,
                             items: data.map((item) {
                               return new DropdownMenuItem(
                                 child: new Text(item['name']),
@@ -331,8 +326,8 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                         ),
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 24),
                           child: DropdownButton(
+                            isExpanded: true,
                             items: Districtdata.map((item) {
                               return new DropdownMenuItem(
                                 child: new Text(item['name']),
@@ -364,8 +359,8 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                         ),
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 24),
                           child: DropdownButton(
+                            isExpanded: true,
                             items: Sectorsdata.map((item) {
                               return new DropdownMenuItem(
                                 child: new Text(item['name']),
@@ -431,8 +426,9 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                           child: Text('Marital Status (Victim)'),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 24),
+                          width: double.infinity,
                           child: DropdownButton(
+                            isExpanded: true,
                             onChanged: (val) {
                               setState(() {
                                 victimMaritalStatus = val;
@@ -481,7 +477,8 @@ class _EditCaseScreenState extends State<EditCaseScreen> {
                           },
                         ),
                         FlatButton(
-                          child: Text('Save'),
+                          child: Text('Save',style: TextStyle(color: Colors.white),),
+                          color: Colors.blueAccent,
                           onPressed: () {
                             perpretorName = perpretorNameField.text;
                             perpretorReletation = perpretorReletationField.text;

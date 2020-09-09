@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/screens/pages/dashboardpages/all_cases_page.dart';
 import 'package:gbv_tracker/screens/pages/dashboardpages/cases_overview_page.dart';
 import 'package:gbv_tracker/screens/pages/dashboardpages/figure_page.dart';
@@ -134,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: Icon(Icons.notifications),
                 onPressed: () {
-                  //TODO : show notifications here
+                  Navigator.pushNamed(context, NotificationScreen.id);
                 },
               ),
               LogoutButton(

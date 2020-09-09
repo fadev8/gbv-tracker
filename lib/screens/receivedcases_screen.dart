@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gbv_tracker/constants/constants.dart';
-import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/case_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
@@ -18,8 +19,9 @@ class ReceivedCaseScreen extends StatefulWidget {
 }
 
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
-  String fromDate, toDate;
-  String start = "50", limit = "0";
+  String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
+  String toDate = DateTime.now().toString();
+  String start = "10", limit = "0";
   List<DataRow> dataRows = List();
 
   DateTime _date = DateTime.now();
@@ -61,6 +63,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     return _date.toString();
   }
 
+  
+
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +83,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
             IconButton(
               icon: Icon(Icons.notifications),
               onPressed: () {
-                //TODO : show notifications here
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(

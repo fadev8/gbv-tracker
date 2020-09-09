@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gbv_tracker/constants/constants.dart';
-import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/case_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
@@ -18,7 +19,8 @@ class TrashScreen extends StatefulWidget {
 }
 
 class _TrashScreenState extends State<TrashScreen> {
-  String fromDate, toDate;
+  String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
+  String toDate = DateTime.now().toString();
   String start = "50", limit = "0";
   DateTime _date = DateTime.now();
   bool loadingData = false;
@@ -75,7 +77,7 @@ class _TrashScreenState extends State<TrashScreen> {
             IconButton(
               icon: Icon(Icons.notifications),
               onPressed: () {
-                //TODO : show notifications here
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(

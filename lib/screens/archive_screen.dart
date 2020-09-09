@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
-import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/case_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
@@ -17,7 +18,8 @@ class ArchiveScreen extends StatefulWidget {
 }
 
 class _ArchiveScreenState extends State<ArchiveScreen> {
-  String fromDate, toDate;
+  String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
+  String toDate = DateTime.now().toString();
   String start = "50", limit = "0";
 
   DateTime _date = DateTime.now();
@@ -76,7 +78,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             IconButton(
               icon: Icon(Icons.notifications),
               onPressed: () {
-                //TODO : show notifications here
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(

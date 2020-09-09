@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
 import 'package:toast/toast.dart';
 import 'dart:convert' as convert;
@@ -82,7 +83,7 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                 color: Colors.white,
               ),
               onPressed: () {
-                //TODO : Display Notification
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(
