@@ -21,7 +21,12 @@ class ReceivedCaseScreen extends StatefulWidget {
 class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
   String toDate = DateTime.now().toString();
-  String start = "10", limit = "0";
+
+  ScrollController _controller = ScrollController();
+  String start = "50", limit = "0";
+  int startOffset = 50, limitOffset = 0;
+  bool moreCasesAvailable = true;
+  bool loadingMoreCases = false;
   List<DataRow> dataRows = List();
 
   DateTime _date = DateTime.now();
@@ -38,7 +43,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         receivedCasesListJson = await getReceivedCaseList(start, limit);
         setState(() {
           if (receivedCasesListJson['status'] == "1") {
-            receivedCasesList = receivedCasesListJson['data'];
+            receivedCasesList.addAll(receivedCasesListJson['data']);
             print(receivedCasesList);
           }
         });
@@ -48,6 +53,42 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     setState(() {
       loadingData = false;
     });
+  }
+
+  loadMoreCases() async {
+    //print('invoqued loading more cases...');
+    if (moreCasesAvailable == false) {
+      print('returning...morecaseaval');
+      return;
+    }
+    if (loadingMoreCases == true) {
+      print('returning loadin..');
+      return;
+    }
+    loadingMoreCases = true;
+
+    limitOffset = startOffset;
+    startOffset = startOffset * 2;
+    start = '$startOffset';
+    limit = '$limitOffset';
+
+    print('start is now to $start');
+
+    var user_category = await getRef("user_category");
+
+    if (user_category != null) {
+      if (user_category == "SU") {
+        receivedCasesListJson = await getReceivedCaseList(start, limit);
+
+        if (receivedCasesListJson['status'] == "1") {
+          receivedCasesList = receivedCasesListJson['data'];
+          print('Data is retrieved');
+        }
+      } else {}
+    } else {}
+    setState(() {});
+
+    loadingMoreCases = false;
   }
 
   Future<String> initDatePicker() async {
@@ -63,13 +104,18 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     return _date.toString();
   }
 
-  
-
-
   @override
   void initState() {
     super.initState();
+    _controller.addListener(() {
+      double maxScroll = _controller.position.maxScrollExtent;
+      double currentScroll = _controller.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
 
+      if (maxScroll - currentScroll <= delta) {
+        loadMoreCases();
+      }
+    });
     ReceivedCaseData();
   }
 
@@ -89,7 +135,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
             LogoutButton(
               onPressed: () {
                 //TODO : Logout operation here
-                Logout() ;
+                Logout();
                 Navigator.popAndPushNamed(context, LoginScreen.id);
               },
             ),
@@ -97,6 +143,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
         ),
         drawer: NavDrawer(),
         body: ListView(
+          controller: _controller,
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
             ExpansionTile(
@@ -197,7 +244,10 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FlatButton(
-                      child: Text('Preview',style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        'Preview',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       color: Colors.blueAccent,
                       onPressed: () {
                         showDialog(
@@ -205,22 +255,26 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                           builder: (context) {
                             return AlertDialog(
                               title: Text('Confirm'),
-                              content: Text('Do you want to view Received Cases?'),
+                              content:
+                                  Text('Do you want to view Received Cases?'),
                               actions: [
                                 FlatButton(
-                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                   color: Colors.grey,
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
                                 ),
-
-
                                 FlatButton(
-                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
+                                  child: Text(
+                                    'Confirm',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   onPressed: () {
                                     //TODO : Submit Received Case filter data
-
                                   },
                                   color: Colors.blueAccent,
                                 )

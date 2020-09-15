@@ -21,6 +21,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
   String toDate = DateTime.now().toString();
   String start = "50", limit = "0";
+  int startOffset = 50, limitOffset = 0;
+  bool moreCasesAvailable = true;
+  bool loadingMoreCases = false;
+  ScrollController _controller = ScrollController();
 
   DateTime _date = DateTime.now();
   bool loadingData = false;
@@ -49,6 +53,46 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     });
   }
 
+  loadMoreCases() async {
+    //print('invoqued loading more cases...');
+    if (moreCasesAvailable == false) {
+      print('returning...morecaseaval');
+      return;
+    }
+    if (loadingMoreCases == true) {
+      print('returning loadin..');
+      return;
+    }
+    loadingMoreCases = true;
+
+    limitOffset = startOffset;
+    startOffset = startOffset * 2;
+    start = '$startOffset';
+    limit = '$limitOffset';
+
+    print('start is now to $start');
+
+    var user_category = await getRef("user_category");
+
+    if (user_category != null) {
+      if (user_category == "SU") {
+        archivedCasesListJson = await getArchivedCaseList(start, limit);
+        setState(() {
+          if (archivedCasesListJson['status'] == "1") {
+            archivedCasesList.addAll(archivedCasesListJson['data']);
+            print(archivedCasesList);
+          } else
+            archivedCasesList = [];
+        });
+      } else {}
+    } else {}
+
+    setState(() {});
+
+    loadingMoreCases = false;
+  }
+
+
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
         context: context,
@@ -65,6 +109,15 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   void initState() {
     super.initState();
+    _controller.addListener(() {
+      double maxScroll = _controller.position.maxScrollExtent;
+      double currentScroll = _controller.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+
+      if (maxScroll - currentScroll <= delta) {
+        loadMoreCases();
+      }
+    });
     ArchivedCaseData();
   }
 
@@ -92,6 +145,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         ),
         drawer: NavDrawer(),
         body: ListView(
+          controller: _controller,
           padding: EdgeInsets.all(10).copyWith(bottom: 20),
           children: [
             ExpansionTile(
