@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_tracker/constants/constants.dart';
-import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/case_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/services/case.dart';
 import 'package:gbv_tracker/widgets/drawer.dart';
@@ -18,8 +19,13 @@ class FollowupScreen extends StatefulWidget {
 }
 
 class _FollowupScreenState extends State<FollowupScreen> {
-  String fromDate, toDate;
+  String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
+  String toDate = DateTime.now().toString();
   String start = "50", limit = "0";
+  int startOffset = 50, limitOffset = 0;
+  bool moreCasesAvailable = true;
+  bool loadingMoreCases = false;
+  ScrollController _controller = ScrollController();
 
   //List<DataRow> dataRows = List();
   DateTime _date = DateTime.now();
@@ -48,6 +54,44 @@ class _FollowupScreenState extends State<FollowupScreen> {
     });
   }
 
+  loadMoreCases() async {
+    //print('invoqued loading more cases...');
+    if (moreCasesAvailable == false) {
+      print('returning...morecaseaval');
+      return;
+    }
+    if (loadingMoreCases == true) {
+      print('returning loadin..');
+      return;
+    }
+    loadingMoreCases = true;
+
+    limitOffset = startOffset;
+    startOffset = startOffset * 2;
+    start = '$startOffset';
+    limit = '$limitOffset';
+
+    print('start is now to $start');
+
+    var user_category = await getRef("user_category");
+
+    if (user_category != null) {
+      if (user_category == "SU") {
+        supportedCasesListJson = await getSupportedCaseList(start, limit);
+        setState(() {
+          if (supportedCasesListJson['status'] == "1") {
+            supportedCasesList.addAll(supportedCasesListJson['data']);
+            print(supportedCasesList);
+          }
+        });
+      } else {}
+    } else {}
+
+    setState(() {});
+
+    loadingMoreCases = false;
+  }
+
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
         context: context,
@@ -64,6 +108,15 @@ class _FollowupScreenState extends State<FollowupScreen> {
   @override
   void initState() {
     super.initState();
+    _controller.addListener(() {
+      double maxScroll = _controller.position.maxScrollExtent;
+      double currentScroll = _controller.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+
+      if (maxScroll - currentScroll <= delta) {
+        loadMoreCases();
+      }
+    });
     SupportedCaseData();
   }
 
@@ -77,7 +130,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
             IconButton(
               icon: Icon(Icons.notifications),
               onPressed: () {
-                //TODO : show notifications here
+                Navigator.pushNamed(context, NotificationScreen.id);
               },
             ),
             LogoutButton(

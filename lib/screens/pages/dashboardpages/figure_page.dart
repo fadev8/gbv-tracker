@@ -28,7 +28,10 @@ class FigurePage extends StatefulWidget {
 class _FigurePageState extends State<FigurePage> {
 
   //date and datepicker
-  String fromDate, toDate;
+
+
+  String fromDate = DateTime.now().subtract(Duration(days: 1)).toString();
+  String toDate = DateTime.now().toString();
   DateTime _date = DateTime.now();
 
   Future<String> initDatePicker() async{

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gbv_tracker/screens/CaseScreen.dart';
+import 'package:gbv_tracker/screens/case_screen.dart';
 import 'package:gbv_tracker/screens/app_info_screen.dart';
 import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
@@ -8,8 +8,10 @@ import 'package:gbv_tracker/screens/forgetten_password_screen.dart';
 import 'package:gbv_tracker/screens/forms/add_reaction_screen.dart';
 import 'package:gbv_tracker/screens/forms/edit_case_scren.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
+import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
+import 'package:gbv_tracker/screens/welcome_screen.dart';
 
 void main() {
   runApp(GBVApp());
@@ -25,9 +27,9 @@ class GBVApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      initialRoute: LoginScreen.id,
-
+      initialRoute: WelcomeScreen.id,
       routes: {
+        WelcomeScreen.id : (context) => WelcomeScreen(),
         LoginScreen.id : (context) => LoginScreen(),
         DashboardScreen.id : (context) => DashboardScreen(),
         ReceivedCaseScreen.id : (context) => ReceivedCaseScreen(),
@@ -36,6 +38,7 @@ class GBVApp extends StatelessWidget {
         TrashScreen.id : (context) => TrashScreen(),
         ForgottenPasswordScreen.id : (context) => ForgottenPasswordScreen(),
         AppInfoScreen.id : (context) => AppInfoScreen(),
+        NotificationScreen.id : (context)=> NotificationScreen(),
       },
     );
   }
