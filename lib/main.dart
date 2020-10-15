@@ -10,6 +10,7 @@ import 'package:gbv_tracker/screens/forms/edit_case_scren.dart';
 import 'package:gbv_tracker/screens/login_screen.dart';
 import 'package:gbv_tracker/screens/notification_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
+import 'package:gbv_tracker/screens/report_case_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
 import 'package:gbv_tracker/screens/welcome_screen.dart';
 
@@ -30,6 +31,7 @@ class GBVApp extends StatelessWidget {
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id : (context) => WelcomeScreen(),
+        ReportCaseScreen.id : (context) => ReportCaseScreen(),
         LoginScreen.id : (context) => LoginScreen(),
         DashboardScreen.id : (context) => DashboardScreen(),
         ReceivedCaseScreen.id : (context) => ReceivedCaseScreen(),
