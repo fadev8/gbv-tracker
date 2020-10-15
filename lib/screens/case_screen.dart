@@ -441,6 +441,14 @@ class _CaseScreenState extends State<CaseScreen> {
               editCase(widget.case_id.toString());
             },
           ),
+
+          IconButton(
+            icon: Icon(FontAwesomeIcons.edit, color: Colors.green),
+            onPressed: () {
+              //calling the Add Reaction screen
+              addReaction(widget.case_id.toString());
+            },
+          ),
           IconButton(
             icon: Icon(FontAwesomeIcons.archive),
             onPressed: () {

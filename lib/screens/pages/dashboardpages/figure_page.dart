@@ -13,6 +13,8 @@ class FigurePage extends StatefulWidget {
   int sexualCases;
   int propertyCases;
   int otherCases;
+  int teenPregnancy;
+  int childAbuse;
 
   FigurePage(
       {this.otherCases,
@@ -20,6 +22,8 @@ class FigurePage extends StatefulWidget {
         this.psychologicalCases,
         this.physicalCases,
         this.allCases,
+        this.childAbuse,
+        this.teenPregnancy,
         this.sexualCases});
   @override
   _FigurePageState createState() => _FigurePageState();
@@ -197,6 +201,28 @@ class _FigurePageState extends State<FigurePage> {
           dataNumber: widget.propertyCases,
           iconColor: Colors.blueAccent,
           icon: FontAwesomeIcons.warehouse,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+
+        //============= Teen pregnancy ===========
+        FigureDataTile(
+          title: 'Teen Pregnancy',
+          dataNumber: widget.teenPregnancy,
+          iconColor: Colors.red,
+          icon: FontAwesomeIcons.child,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+
+        //=========== Child abuse ==============
+        FigureDataTile(
+          title: 'Child Abuse',
+          dataNumber: widget.childAbuse,
+          iconColor: Colors.red,
+          icon: FontAwesomeIcons.child,
         ),
         SizedBox(
           height: 10,
