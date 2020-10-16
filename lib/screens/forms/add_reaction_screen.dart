@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
 import 'package:gbv_tracker/core/api.dart';
 
+import '../dashboard_screen.dart';
+
 class AddReactionScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
   final String case_id;
@@ -28,7 +30,7 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
 
   //from Date and to date variables
   DateTime _date = DateTime.now();
-  String fromDate,toDate;
+  String fromDate="",toDate="";
 
   Future<String> initDatePicker() async {
     DateTime pickedDate = await showDatePicker(
@@ -44,12 +46,14 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
   }
 
   SupportCase(String interventionDone, String interventionDoneBy,
-      String interventionDescription) async {
+      String interventionDescription,String from,String to) async {
     http.Response response = await http.post(BASE_URL + "claims", body: {
       'action': "Add-Suport",
       'intervation': interventionDone,
       'intervation_by': interventionDoneBy,
       'service_get': interventionDescription,
+      'from': from,
+      'to': to,
       'specification': "N/A",
       'case_id': widget.case_id,
     });
@@ -157,18 +161,7 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                             child: Text('Financial support'),
                             value: 'FINANCIAL SUPPORT',
                           ),
-                          DropdownMenuItem(
-                            child: Text('Perpetrator arrested'),
-                            value: 'PERPETRATOR ARRESTED',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Forward to court'),
-                            value: 'FORWARDED TO COURT',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Under ongoing investigation'),
-                            value: 'UNDER INVESTIGATION',
-                          ),
+
                           DropdownMenuItem(
                             child: Text('Closed cases'),
                             value: 'CLOSED CASES',
@@ -336,11 +329,11 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
                       if (interventionDescription != '' &&
                           selectedIntervention != 'SELECT' &&
                           interventionDoneBy != 'SELECT') {
-                        print(interventionDescription);
+                        print(fromDate+" "+toDate);
                         SupportCase(selectedIntervention, interventionDoneBy,
-                            interventionDescription);
-//                            Navigator.pushNamed(context, DashboardScreen.id);
-////                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                            interventionDescription,fromDate,toDate);
+                            Navigator.pushNamed(context, DashboardScreen.id);
+//                                  Toast.show(user.Display(statusCode), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                       } else {
                         Toast.show(
                             "Please fill all the field and proceed", context,

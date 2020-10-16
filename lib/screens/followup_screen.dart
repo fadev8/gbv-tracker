@@ -293,8 +293,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
                         columns: [
-                          DataColumn(label: (Text('Channel'))),
-                          DataColumn(label: (Text('Phone Used to report'))),
+                          DataColumn(label: (Text('User name'))),
                           DataColumn(label: (Text('Victim\'s name'))),
                           DataColumn(label: (Text('Violence Type'))),
                           DataColumn(label: (Text('Description'))),
@@ -313,12 +312,11 @@ class _FollowupScreenState extends State<FollowupScreen> {
                                       }));
                                     },
                                     cells: <DataCell>[
-                                      DataCell(Text(element["channel"])),
-                                      DataCell(Text(element[
-                                                  "telephone_used_to_report"] !=
-                                              null
-                                          ? element["telephone_used_to_report"]
-                                          : "N/A")),
+
+                                      DataCell(Text(element["user_firstname"] !=
+                                          null
+                                          ? element["user_firstname"]+" "+element["user_lastname"]
+                                          : " ")),
                                       DataCell(Text(element["victim_name"])),
                                       DataCell(Text(element["violence_type"])),
                                       DataCell(Text(

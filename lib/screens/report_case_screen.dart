@@ -17,15 +17,21 @@ enum Sex { Male, Female }
 
 class _ReportCaseScreenState extends State<ReportCaseScreen> {
   TextEditingController _controller = TextEditingController();
+  TextEditingController Namescontroller = new TextEditingController();
+  TextEditingController agecontroller = new TextEditingController();
+  TextEditingController telephonecontroller = new TextEditingController();
+  TextEditingController idNumbercontroller = new TextEditingController();
+  TextEditingController disabilityDescriptioncontroller = new TextEditingController();
+  TextEditingController emailcontroller = new TextEditingController();
   //variable for set managment
   int _currentStep = 0;
 
   //===== Step 1 Values
-  String fullNames;
+  String fullNames="";
   String victimeSex = 'Male';
-  String age, telephone, email;
-  String idNumber;
-  String disabilityDescription;
+  String age="", telephone="", email="";
+  String idNumber="";
+  String disabilityDescription="";
   bool hasDisability = false;
 
   //Data about proving
@@ -35,6 +41,8 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
   String Province;
   String District;
   String Sectors;
+  String Victimcell="";
+  String Victimvillage="";
 
   //===  Ste3 variables
   String violenceType = 'SELECT';
@@ -108,8 +116,11 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               if (_currentStep < this._formSetps().length - 1) {
                 _currentStep++;
               } else {
-                //TODO : Check that the whole form has been filled
-                //TODO : Submit the form here
+                fullNames=Namescontroller.text;
+
+               print(fullNames +" "+victimeSex+" "+age+" "+idNumber+" "+telephone+" "+email+" "+disabilityDescription);
+                print(Victimcell +" "+Victimvillage);
+
                 print('End of form');
               }
             });
@@ -159,6 +170,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                 children: [
                   Text('Names'),
                   TextField(
+                    controller: Namescontroller,
                     decoration: InputDecoration(
                       hintText: 'Enter full name here',
                       border: OutlineInputBorder(),
@@ -214,6 +226,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                 children: [
                   Text('Age'),
                   TextField(
+
                     onChanged: (value) {
                       age = value;
                     },
@@ -440,7 +453,9 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Victim\'s cell'),
                 TextField(
-                  onChanged: (val) {},
+                  onChanged: (value) {
+                    Victimcell = value;
+                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Victim\'s cell',
@@ -457,7 +472,9 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Victim\'s village'),
                 TextField(
-                  onChanged: (val) {},
+                  onChanged: (value) {
+                    Victimvillage = value;
+                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Victim\'s village',

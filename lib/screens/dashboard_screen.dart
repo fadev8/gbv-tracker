@@ -35,6 +35,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       psychology = 0,
       sexual = 0,
       property = 0,
+      teenpregnancy = 0,
+      childabuse = 0,
       others = 0;
   int male = 0,
       female = 0,
@@ -84,6 +86,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             physical = responseFigureData['physical'];
             psychology = responseFigureData['psychological'];
             sexual = responseFigureData['sexual'];
+            teenpregnancy = responseFigureData['teenpregnancy'];
+            childabuse = responseFigureData['childabuse'];
             property = responseFigureData['property'];
             others = responseFigureData['others'];
           });
@@ -198,6 +202,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   psychologicalCases: psychology,
                   physicalCases: physical,
                   allCases: allCase,
+                  childAbuse: teenpregnancy,
+                  teenPregnancy: childabuse,
                   sexualCases: sexual), //TODO pass in data here
               AllCasesPage(
                 closedCases: archived.toDouble(),
