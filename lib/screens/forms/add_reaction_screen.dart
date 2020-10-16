@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
 import 'package:gbv_tracker/core/api.dart';
 
-
 class AddReactionScreen extends StatefulWidget {
   static String id = 'edit_case_screen';
   final String case_id;
@@ -26,6 +25,23 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
       interventionDoneBy = "SELECT",
       interventionDescription;
   TextEditingController controller = new TextEditingController();
+
+  //from Date and to date variables
+  DateTime _date = DateTime.now();
+  String fromDate,toDate;
+
+  Future<String> initDatePicker() async {
+    DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2100));
+
+    if (pickedDate != null && pickedDate != _date) {
+      _date = pickedDate;
+    }
+    return _date.toString();
+  }
 
   SupportCase(String interventionDone, String interventionDoneBy,
       String interventionDescription) async {
@@ -170,6 +186,61 @@ class _AddReactionScreenState extends State<AddReactionScreen> {
               SizedBox(
                 height: 16,
               ),
+              //==========Date to display in case of Hosted in SafeHouse =========
+              Wrap(
+                children: [
+                  selectedIntervention == 'HOSTED IN SAFE HOUSE'
+                      ? Column(
+                          children: [
+                            Text('Select Dates'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                MaterialButton(
+                                  color: Colors.grey,
+                                  child: Text('From :'),
+                                  onPressed: () async {
+                                    fromDate = await initDatePicker();
+                                    setState(() {});
+                                  },
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    fromDate ?? '',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                FlatButton(
+                                  color: Colors.grey,
+                                  padding: EdgeInsets.all(0),
+                                  child: Text('To :'),
+                                  onPressed: () async {
+                                    toDate = await initDatePicker();
+                                    setState(() {});
+                                  },
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    toDate ?? '',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        )
+                      : Text('')
+                ],
+              ),
+
               Wrap(
                 children: [
                   Text('Intervention done by'),

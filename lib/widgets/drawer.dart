@@ -6,6 +6,7 @@ import 'package:gbv_tracker/screens/archive_screen.dart';
 import 'package:gbv_tracker/screens/dashboard_screen.dart';
 import 'package:gbv_tracker/screens/followup_screen.dart';
 import 'package:gbv_tracker/screens/receivedcases_screen.dart';
+import 'package:gbv_tracker/screens/report_case_screen.dart';
 import 'package:gbv_tracker/screens/trash_screen.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -34,6 +35,19 @@ class NavDrawer extends StatelessWidget {
                   color: Colors.white10
                   ,
                 ),
+
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.plus,color: kDrawerIconsColor,),
+                  title: Text('Report a Case',style: kDrawerTitleStyle,),
+                  onTap: (){
+                    Navigator.popAndPushNamed(context, ReportCaseScreen.id);
+                  },
+                ),
+                Divider(
+                  color: Colors.white10
+                  ,
+                ),
+
                 ListTile(
                   leading: Icon(FontAwesomeIcons.layerGroup,color: kDrawerIconsColor,),
                   title: Text('Received Cases',style: kDrawerTitleStyle,),
