@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 //    print("ccc" + user_category);
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         //get Overview data
         responseOverviewJson = await getDefaultAdminCaseOverview();
         print(responseOverviewJson);
@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             archived = responseAllCasesData['closed'];
           });
         }
-      } else {}
+//      } else {}
     } else {
       today = 9000;
     }
@@ -202,8 +202,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   psychologicalCases: psychology,
                   physicalCases: physical,
                   allCases: allCase,
-                  childAbuse: teenpregnancy,
-                  teenPregnancy: childabuse,
+                  childAbuse: childabuse,
+                  teenPregnancy: teenpregnancy,
                   sexualCases: sexual), //TODO pass in data here
               AllCasesPage(
                 closedCases: archived.toDouble(),

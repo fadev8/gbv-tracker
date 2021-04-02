@@ -6,9 +6,9 @@ import 'dart:io';
 
 
 
-    const String BASE_URL = "http://192.168.0.115:8080/actionaid/";
-//   const String BASE_URL = "http://172.20.10.2:8080/actionaid/";
-//      const String BASE_URL ="http://197.243.21.252:8220/actionaid/";
+//    const String BASE_URL = "http://192.168.1.3:8080/actionaid/";
+//   const String BASE_URL = "http://172.20.10.4:8080/actionaid/";
+      const String BASE_URL ="http://197.243.21.252:8220/actionaid/";
 
 
 //Login  Data Collections
@@ -59,6 +59,7 @@ Map<String, dynamic> responseCasesSupportData ;
 Map<String, dynamic> ProvinceListJson ;
 Map<String, dynamic> DistrictListJson ;
 Map<String, dynamic> SectorListJson ;
+Map<String, dynamic> GroupListJson ;
 
 
 
@@ -126,6 +127,26 @@ getHeaders() async{
               return jsonResponse;
 
             }
+
+
+        getReceivedCaseResearch(String Status,String District,String Type,String from,String to,String start, String limit)  async {
+          var resp = await http.post(BASE_URL+"claims",
+              body: {
+                'action': "getReceivedCaseSearch",
+                'status':Status,
+                'district': District,
+                'Type':Type,
+                'from':from,
+                'to':to,
+                'start': start,
+                'limit': limit,
+
+              });
+
+          var jsonResponse = convert.jsonDecode(resp.body);
+          return jsonResponse;
+
+        }
 
               getSupportedCaseList(String start, String limit)  async {
                 var resp = await http.post(BASE_URL+"claims",
@@ -211,6 +232,31 @@ getHeaders() async{
         }
 
 
+    getallDistricts()  async {
+      var resp = await http.post(BASE_URL+"address",
+          body: {
+            'action': "getAllDistricts",
+
+          });
+
+      var jsonResponse = convert.jsonDecode(resp.body);
+      return jsonResponse;
+
+    }
+
+getGroup()  async {
+  var resp = await http.post(BASE_URL+"address",
+      body: {
+        'action': "getgroup",
+
+      });
+
+  var jsonResponse = convert.jsonDecode(resp.body);
+  return jsonResponse;
+
+}
+
+
         getDistrict(String province)  async {
           var resp = await http.post(BASE_URL+"address",
               body: {
@@ -224,6 +270,20 @@ getHeaders() async{
           return jsonResponse;
 
         }
+
+getAllDistrict()  async {
+  var resp = await http.post(BASE_URL+"address",
+      body: {
+
+        'action': "get-All-Districts",
+
+
+      });
+
+  var jsonResponse = convert.jsonDecode(resp.body);
+  return jsonResponse;
+
+}
 
       getSectors(String district)  async {
         var resp = await http.post(BASE_URL+"address",

@@ -36,109 +36,109 @@ class CasesOverviewPage extends StatelessWidget {
       padding: EdgeInsets.all(9).copyWith(bottom: 24),
       children: [
 
-        ExpansionTile(
-          leading: Icon(Icons.filter_list),
-          title: Text('Filter'),
-          children: [
-            Wrap(
-              spacing: 6,
-              children: [
-                DropdownButton(
-                  onChanged: (index) {
-                    //TODO action when the menu is tapped
-                    print('selected index $index');
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                  ],
-                ),
-                DropdownButton(
-                  focusColor: Colors.grey,
-                  onChanged: (index) {
-                    //TODO action when the menu is tapped
-                    print('selected index $index');
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                  ],
-                ),
-                DropdownButton(
-                  onChanged: (index) {
-                    //TODO action when the menu is tapped
-                    print('selected index $index');
-                  },
-                  items: [
-                    //TODO populate the Dropdown with data
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Filter by Province'),
-                    ),
-                  ],
-                ),
-                FlatButton(
-                  child: Text('Preview', style: TextStyle(color: Colors.white),),
-                  color: Colors.blueAccent,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Confirm'),
-                          content: Text('Preview cases overview?'),
-                          actions: [
-                            FlatButton(
-                              child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                              color: Colors.grey,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-
-
-                            FlatButton(
-                              child: Text('Confirm', style: TextStyle(color: Colors.white),),
-                              onPressed: () {
-                                //TODO : Submit Archive filter datat
-
-                              },
-                              color: Colors.blueAccent,
-                            )
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-          ],
-        ),
+//        ExpansionTile(
+//          leading: Icon(Icons.filter_list),
+//          title: Text('Filter'),
+//          children: [
+//            Wrap(
+//              spacing: 6,
+//              children: [
+//                DropdownButton(
+//                  onChanged: (index) {
+//                    //TODO action when the menu is tapped
+//                    print('selected index $index');
+//                  },
+//                  items: [
+//                    //TODO populate the Dropdown with data
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                  ],
+//                ),
+//                DropdownButton(
+//                  focusColor: Colors.grey,
+//                  onChanged: (index) {
+//                    //TODO action when the menu is tapped
+//                    print('selected index $index');
+//                  },
+//                  items: [
+//                    //TODO populate the Dropdown with data
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                  ],
+//                ),
+//                DropdownButton(
+//                  onChanged: (index) {
+//                    //TODO action when the menu is tapped
+//                    print('selected index $index');
+//                  },
+//                  items: [
+//                    //TODO populate the Dropdown with data
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                    DropdownMenuItem(
+//                      child: Text('Filter by Province'),
+//                    ),
+//                  ],
+//                ),
+//                FlatButton(
+//                  child: Text('Preview', style: TextStyle(color: Colors.white),),
+//                  color: Colors.blueAccent,
+//                  onPressed: () {
+//                    showDialog(
+//                      context: context,
+//                      builder: (context) {
+//                        return AlertDialog(
+//                          title: Text('Confirm'),
+//                          content: Text('Preview cases overview?'),
+//                          actions: [
+//                            FlatButton(
+//                              child: Text('Cancel',style: TextStyle(color: Colors.black),),
+//                              color: Colors.grey,
+//                              onPressed: () {
+//                                Navigator.pop(context);
+//                              },
+//                            ),
+//
+//
+//                            FlatButton(
+//                              child: Text('Confirm', style: TextStyle(color: Colors.white),),
+//                              onPressed: () {
+//                                //TODO : Submit Archive filter datat
+//
+//                              },
+//                              color: Colors.blueAccent,
+//                            )
+//                          ],
+//                        );
+//                      },
+//                    );
+//                  },
+//                ),
+//              ],
+//            ),
+//            SizedBox(
+//              height: 16,
+//            ),
+//          ],
+//        ),
         Column(
           children: [
             OverviewDataTile(

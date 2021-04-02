@@ -5,6 +5,17 @@ import 'package:gbv_tracker/constants/constants.dart';
 import 'package:gbv_tracker/core/api.dart';
 import 'package:gbv_tracker/core/init.dart';
 import 'package:gbv_tracker/widgets/logout_button.dart';
+import 'package:sweetalert/sweetalert.dart';
+import 'package:toast/toast.dart';
+
+
+
+
+import 'package:gbv_tracker/screens/receivedcases_screen.dart';
+
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+
 
 class ReportCaseScreen extends StatefulWidget {
   static String id = "report-case-screen";
@@ -18,13 +29,20 @@ enum Sex { Male, Female }
 class _ReportCaseScreenState extends State<ReportCaseScreen> {
   TextEditingController _controller = TextEditingController();
   TextEditingController Namescontroller = new TextEditingController();
-  TextEditingController agecontroller = new TextEditingController();
-  TextEditingController telephonecontroller = new TextEditingController();
-  TextEditingController idNumbercontroller = new TextEditingController();
-  TextEditingController disabilityDescriptioncontroller = new TextEditingController();
+  TextEditingController Victimecellcontroller = new TextEditingController();
+  TextEditingController Victimevillagecontroller = new TextEditingController();
+  TextEditingController perpetratorcellcontroller = new TextEditingController();
+  TextEditingController perpetratorvillagecontroller = new TextEditingController();
   TextEditingController emailcontroller = new TextEditingController();
   //variable for set managment
   int _currentStep = 0;
+
+  String Province;
+
+  String Group;
+  String District;
+  String Sectors;
+  bool loadingData = false;
 
   //===== Step 1 Values
   String fullNames="";
@@ -36,28 +54,55 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
 
   //Data about proving
   List data = [];
+  List dataGroup = [];
+
   List Districtdata = [];
   List Sectorsdata = [];
-  String Province;
-  String District;
-  String Sectors;
-  String Victimcell="";
-  String Victimvillage="";
 
-  //===  Ste3 variables
-  String violenceType = 'SELECT';
-  String numberOfTimes, caseDescription;
-  String violenceDescription;
+  Future<String> ProvinceData() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
 
-  //=== Step 4 variables
-  String perpetratorSex = 'Male';
-  String ageInterval = 'SELECT';
-  bool forwardToPolice = false;
+    if (user_category != null) {
+      ProvinceListJson = await getProvince();
+      setState(() {
+        if (ProvinceListJson['status'] == "1") {
+          data = ProvinceListJson['data'];
+          print(data);
+        }
+      });
+    } else {}
+    setState(() {
+      loadingData = false;
+    });
+  }
 
-  //=== Step5 variables
+  Future<String> GroupData() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
 
-  //========FONCTIONS to retrieved Provincee and District=====
+    if (user_category != null) {
+      GroupListJson = await getGroup();
+      setState(() {
+        if (GroupListJson['status'] == "1") {
+          dataGroup = GroupListJson['data'];
+          print(dataGroup);
+        }
+      });
+    } else {}
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+
+
   Future<String> DistrictData(String Province) async {
+
     var user_category = await getRef("user_category");
     Districtdata = [];
     if (user_category != null) {
@@ -69,9 +114,11 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
         }
       });
     } else {}
+
   }
 
   Future<String> SectorData(String District) async {
+
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
@@ -83,8 +130,203 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
         }
       });
     } else {}
+
   }
 
+  //Data about proving
+  List Pdata = [];
+  List PDistrictdata = [];
+  List PSectorsdata = [];
+
+  String ProvinceP;
+  String DistrictP;
+  String SectorsP;
+
+  Future<String> ProvinceDataP() async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
+
+    if (user_category != null) {
+      ProvinceListJson = await getProvince();
+      setState(() {
+        if (ProvinceListJson['status'] == "1") {
+          Pdata = ProvinceListJson['data'];
+          print(Pdata);
+        }
+      });
+    } else {}
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+  Future<String> DistrictDataP(String Province) async {
+
+    var user_category = await getRef("user_category");
+    PDistrictdata = [];
+    if (user_category != null) {
+      DistrictListJson = await getDistrict(Province);
+      setState(() {
+        if (DistrictListJson['status'] == "1") {
+          PDistrictdata = DistrictListJson['data'];
+          print(PDistrictdata);
+        }
+      });
+    } else {}
+
+  }
+
+  Future<String> SectorDataP(String District) async {
+
+    var user_category = await getRef("user_category");
+    PSectorsdata = [];
+    if (user_category != null) {
+      SectorListJson = await getSectors(District);
+      setState(() {
+        if (SectorListJson['status'] == "1") {
+          PSectorsdata = SectorListJson['data'];
+          print(PSectorsdata);
+        }
+      });
+    } else {}
+
+  }
+
+
+  String Victimcell="";
+  String Victimvillage="";
+
+  //===  Ste3 variables
+  String violenceType = 'SELECT';
+  String numberOfTimes="", caseDescription="";
+  String violenceDescription="";
+
+  //=== Step 4 variables
+  String perpetratorSex = 'Male';
+  String ageInterval = 'SELECT';
+  bool forwardToPolice = false;
+
+  //=== Step5 variables
+
+  String perpetratorcell = "";
+  String perpetratorvillage = "";
+
+  //========FONCTIONS to retrieved Provincee and District=====
+
+
+  AddCase(
+      String fullNames,
+      String victimeSex,
+      String age,
+      String idNumber,
+      String telephone,
+      String email,
+      String disabilityDescription,
+
+      String Province,
+      String District,
+      String Sectors,
+      String Victimcell,
+      String Victimvillage,
+
+      String violenceType,
+      String numberOfTimes,
+      String violenceDescription,
+      String perpetratorSex,
+      String ageInterval,
+
+
+
+      String ProvinceP,
+      String DistrictP,
+      String SectorsP,
+      String perpetratorcell,
+      String perpetratorvillage,
+
+      String group,
+
+
+
+      ) async {
+    var user_id = await getRef("user_id");
+
+    setState(() {
+      loadingData = true;
+    });
+
+ http.Response response = await http.post(BASE_URL + "claims", body: {
+      'action': "AddCase",
+      'victimName': fullNames,
+      'victimGender': victimeSex,
+      'victimIdNumber': idNumber,
+      'victimDisability': disabilityDescription,
+      'victimTelephone': telephone,
+      'victimEmail': email,
+      'victimGroup': group,
+      'victimAge': age,
+      'victimProvince': Province,
+      'victimDistrict': District,
+      'victimSector': Sectors,
+      'victimCell': Victimcell,
+      'victimVillage':Victimvillage ,
+      'victimCaseType': violenceType,
+      'victimNumber_times': numberOfTimes,
+      'victimCaseDescription': violenceDescription,
+      'abuserGender': perpetratorSex,
+      'abuser_age_range':ageInterval ,
+      'caseFfollowup':"false" ,
+      'abuserProvince': ProvinceP,
+      'abuserDistrict': DistrictP,
+      'abuserSector': SectorsP,
+      'abuserCell': perpetratorcell,
+      'abuserVillage':perpetratorvillage ,
+      'user':user_id
+    });
+    print(response.statusCode);
+
+    //check http code
+    if (response.statusCode == 200) {
+      responseJson = convert.jsonDecode(response.body);
+      print(responseJson);
+
+      if (responseJson['status'] == "1") {
+        Toast.show(responseJson['message'], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//        SweetAlert.show(context,
+//            title: responseJson['message'], style: SweetAlertStyle.success);
+
+        print(responseJson);
+
+        // save login data
+
+        Navigator.pushNamed(context, ReceivedCaseScreen.id);
+      } else if (responseJson['status'] == "0") {
+        SweetAlert.show(context,
+            title: responseJson['message'], style: SweetAlertStyle.error);
+      } else
+        Toast.show("Invalid Response Status", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (response.statusCode == 500) {
+      Toast.show("Server eror", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      SweetAlert.show(context,
+          title: "Network Error", style: SweetAlertStyle.error);
+    }
+
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    this.ProvinceData();
+    this.ProvinceDataP();
+    this.GroupData();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -103,7 +345,14 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
         ),
 
         //============ Screen body =========
-        body: Stepper(
+        body:loadingData
+            ? Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+          ),
+        )
+            :  Stepper(
           currentStep: _currentStep,
           steps: _formSetps(),
           onStepTapped: (step){
@@ -117,9 +366,94 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                 _currentStep++;
               } else {
                 fullNames=Namescontroller.text;
+                Victimcell=Victimecellcontroller.text;
+                Victimvillage= Victimevillagecontroller.text;
 
-               print(fullNames +" "+victimeSex+" "+age+" "+idNumber+" "+telephone+" "+email+" "+disabilityDescription);
-                print(Victimcell +" "+Victimvillage);
+              perpetratorcell = perpetratorcellcontroller.text;
+                perpetratorvillage = perpetratorvillagecontroller.text;
+
+                print(fullNames +" "+victimeSex+" "+age+" "+idNumber+" "+telephone+" "+email+" "+disabilityDescription);
+                print(Province +" "+District+" "+Sectors+" "+Victimcell +" "+Victimvillage);
+                print(violenceType +" "+numberOfTimes+" "+violenceDescription+""+Group);
+
+                print(perpetratorSex +" "+ageInterval);
+                    if (fullNames != "" &&
+                        victimeSex != "" &&
+                        age != "" &&
+                        idNumber != "" &&
+                        telephone != "" &&
+                        email != "" &&
+                        Group != "" &&
+                        Province != "" &&
+                        District != "" &&
+                        Sectors != "" &&
+                        Victimcell != "" &&
+                        Victimvillage != "" &&
+                        violenceType != "SELECT" &&
+                        numberOfTimes != "" &&
+                        violenceDescription != "" &&
+
+                        perpetratorSex != "" &&
+                        ageInterval != "SELECT" &&
+
+                        ProvinceP != "" &&
+                        DistrictP != "" &&
+                        SectorsP != "" &&
+                        perpetratorcell != "" &&
+                        perpetratorcell != ""
+                    )
+                    {
+                      AddCase(
+                         fullNames,
+                         victimeSex,
+                         age,
+                         idNumber,
+                         telephone,
+                         email,
+                         disabilityDescription,
+
+                         Province,
+                         District,
+                         Sectors,
+                         Victimcell,
+                         Victimvillage,
+
+                         violenceType,
+                         numberOfTimes,
+                         violenceDescription,
+                         perpetratorSex,
+                         ageInterval,
+
+
+
+                         ProvinceP,
+                         DistrictP,
+                         SectorsP,
+                         perpetratorcell,
+                         perpetratorvillage, Group
+
+
+                      );
+                        print("all fields");
+                      }
+                    else
+                      {
+                      Toast.show(
+                      "Please fill all the field and proceed",
+                      context,
+                      duration: Toast.LENGTH_LONG,
+                      gravity: Toast.BOTTOM);
+                      }
+
+
+
+
+
+
+
+
+
+                print(ProvinceP +" "+DistrictP+" "+SectorsP+" "+perpetratorcell +" "+perpetratorcell);
 
                 print('End of form');
               }
@@ -368,6 +702,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                         value: item['id'].toString(),
                       );
                     }).toList(),
+
                     onChanged: (newVal) {
                       setState(() {
                         Province = newVal;
@@ -453,6 +788,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Victim\'s cell'),
                 TextField(
+                  controller: Victimecellcontroller,
                   onChanged: (value) {
                     Victimcell = value;
                   },
@@ -472,9 +808,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Victim\'s village'),
                 TextField(
-                  onChanged: (value) {
-                    Victimvillage = value;
-                  },
+                controller: Victimevillagecontroller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Victim\'s village',
@@ -530,11 +864,11 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                       ),
                       DropdownMenuItem(
                         child: Text('Property'),
-                        value: 'Proterty',
+                        value: 'Property',
                       ),
                       DropdownMenuItem(
                         child: Text('Teen Pregnancy'),
-                        value: 'Teen Pregancy',
+                        value: 'Teen Pregnancy',
                       ),
                       DropdownMenuItem(
                         child: Text('Child Abuse'),
@@ -546,7 +880,35 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                       ),
                     ],
                   ),
-                )
+                ),
+
+                    Container(
+                      width: double.infinity,
+                      child: Text('Victim Group'),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        items: dataGroup.map((item) {
+                          return new DropdownMenuItem(
+                            child: new Text(item['name']),
+                            value: item['id'].toString(),
+                          );
+                        }).toList(),
+
+                        onChanged: (newVal) {
+                          setState(() {
+                            Group = newVal;
+//                            DistrictData(Group);
+                          });
+                        },
+                        value: Group,
+                      ),
+                    ),
+
+
+
               ],
             ),
             SizedBox(
@@ -687,21 +1049,21 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               height: 16,
             ),
 
-            Wrap(
-              children:[
-                Text('Report'),
-                CheckboxListTile(
-                  title: Text('Forward my case to RIB/Police Directly'),
-                  selected: forwardToPolice,
-                  onChanged: (value){
-                    setState(() {
-                      forwardToPolice = value;
-                    });
-                  },
-                  value: forwardToPolice,
-                ),
-              ]
-            ),
+//            Wrap(
+//              children:[
+//                Text('Report'),
+//                CheckboxListTile(
+//                  title: Text('Forward my case to RIB/Police Directly'),
+//                  selected: forwardToPolice,
+//                  onChanged: (value){
+//                    setState(() {
+//                      forwardToPolice = value;
+//                    });
+//                  },
+//                  value: forwardToPolice,
+//                ),
+//              ]
+//            ),
             SizedBox(height: 16,)
           ],
         ),
@@ -724,7 +1086,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                   width: double.infinity,
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    items: data.map((item) {
+                    items: Pdata.map((item) {
                       return new DropdownMenuItem(
                         child: new Text(item['name']),
                         value: item['id'].toString(),
@@ -732,11 +1094,11 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                     }).toList(),
                     onChanged: (newVal) {
                       setState(() {
-                        Province = newVal;
-                        DistrictData(Province);
+                        ProvinceP = newVal;
+                        DistrictDataP(ProvinceP);
                       });
                     },
-                    value: Province,
+                    value: ProvinceP,
                   ),
                 ),
               ],
@@ -756,7 +1118,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                   width: double.infinity,
                   child: DropdownButton(
                     isExpanded: true,
-                    items: Districtdata.map((item) {
+                    items: PDistrictdata.map((item) {
                       return new DropdownMenuItem(
                         child: new Text(item['name']),
                         value: item['id'].toString(),
@@ -764,12 +1126,12 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                     }).toList(),
                     onChanged: (newVal) {
                       setState(() {
-                        District = newVal;
-                        print(District);
-                        SectorData(District);
+                        DistrictP = newVal;
+                        print(DistrictP);
+                        SectorDataP(DistrictP);
                       });
                     },
-                    value: District,
+                    value: DistrictP,
                   ),
                 )
               ],
@@ -789,7 +1151,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                   width: double.infinity,
                   child: DropdownButton(
                     isExpanded: true,
-                    items: Sectorsdata.map((item) {
+                    items: PSectorsdata.map((item) {
                       return new DropdownMenuItem(
                         child: new Text(item['name']),
                         value: item['id'].toString(),
@@ -797,11 +1159,11 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
                     }).toList(),
                     onChanged: (newVal) {
                       setState(() {
-                        Sectors = newVal;
-                        print(Sectors);
+                        SectorsP = newVal;
+                        print(SectorsP);
                       });
                     },
-                    value: Sectors,
+                    value: SectorsP,
                   ),
                 )
               ],
@@ -815,6 +1177,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Perpetrator\'s cell'),
                 TextField(
+                  controller: perpetratorcellcontroller,
                   onChanged: (val) {},
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -832,6 +1195,7 @@ class _ReportCaseScreenState extends State<ReportCaseScreen> {
               children: [
                 Text('Perpetrator\'s village'),
                 TextField(
+                  controller: perpetratorvillagecontroller,
                   onChanged: (val) {
 
                   },

@@ -31,6 +31,56 @@ class _FollowupScreenState extends State<FollowupScreen> {
   DateTime _date = DateTime.now();
   bool loadingData = false;
 
+  String District;
+  List Districtdata = [];
+  String violenceType = 'SELECT';
+
+
+  caseResearch(String Status,String District,String Type,String from,String to,String start, String limit) async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
+    supportedCasesList=[];
+    if (user_category != null) {
+//      if (user_category == "SU") {
+      supportedCasesListJson = await getReceivedCaseResearch(Status,District,Type,from,to,start, limit);
+      setState(() {
+        if (supportedCasesListJson['status'] == "1") {
+          supportedCasesList.addAll(supportedCasesListJson['data']);
+          print(supportedCasesList);
+        }
+        else
+          {
+//            print(supportedCasesList['status']);
+//            print(supportedCasesList['message']);
+          }
+      });
+//      } else {}
+    } else {}
+
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+
+  Future<String> DistrictData() async {
+
+    var user_category = await getRef("user_category");
+    Districtdata = [];
+    if (user_category != null) {
+      DistrictListJson = await getAllDistrict();
+      setState(() {
+        if (DistrictListJson['status'] == "1") {
+          Districtdata = DistrictListJson['data'];
+          print(Districtdata);
+        }
+      });
+    } else {}
+
+  }
+
   SupportedCaseData() async {
     setState(() {
       loadingData = true;
@@ -38,7 +88,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         supportedCasesListJson = await getSupportedCaseList(start, limit);
         setState(() {
           if (supportedCasesListJson['status'] == "1") {
@@ -46,7 +96,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
             print(supportedCasesList);
           }
         });
-      } else {}
+//      } else {}
     } else {}
 
     setState(() {
@@ -76,7 +126,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         supportedCasesListJson = await getSupportedCaseList(start, limit);
         setState(() {
           if (supportedCasesListJson['status'] == "1") {
@@ -84,7 +134,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
             print(supportedCasesList);
           }
         });
-      } else {}
+//      } else {}
     } else {}
 
     setState(() {});
@@ -118,6 +168,7 @@ class _FollowupScreenState extends State<FollowupScreen> {
       }
     });
     SupportedCaseData();
+    DistrictData();
   }
 
   @override
@@ -154,43 +205,64 @@ class _FollowupScreenState extends State<FollowupScreen> {
                   spacing: 20,
                   children: [
                     DropdownButton(
-                      onChanged: (index) {
-                        if (index != 0) {
-                          setState(() {
-                            //TODO action when the menu is tapped
-                            print('selected index $index');
-                          });
-                        }
+                      focusColor: Colors.grey,
+                      isExpanded: true,
+                      onChanged: (newVal) {
+                        setState(() {
+                          District = newVal;
+                          print(District);
+
+                        });
                       },
-                      items: [
-                        //TODO populate the Dropdown with data
-                        DropdownMenuItem(
-                          child: Text('District'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 1'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 2'),
-                        ),
-                      ],
+                      value: District,
+                      items: Districtdata.map((item) {
+                        return new DropdownMenuItem(
+                          child: new Text(item['name']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
                     ),
                     DropdownButton(
                       focusColor: Colors.grey,
-                      onChanged: (index) {
-                        //TODO action when the menu is tapped
-                        print('selected index $index');
+                      isExpanded: true,
+                      onChanged: (val) {
+                        setState(() {
+                          violenceType = val;
+                          print(violenceType);
+                        });
                       },
                       items: [
                         //TODO populate the Dropdown with data
                         DropdownMenuItem(
-                          child: Text('GBV type'),
+                          child: Text(violenceType),
                         ),
                         DropdownMenuItem(
-                          child: Text('Received cases'),
+                          child: Text('Physical'),
+                          value: 'Physical',
                         ),
                         DropdownMenuItem(
-                          child: Text('Followup in progress'),
+                          child: Text('Psychological'),
+                          value: 'Psychological',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Sexual'),
+                          value: 'Sexual',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Property'),
+                          value: 'Property',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Teen Pregnancy'),
+                          value: 'Teen Pregnancy',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Child Abuse'),
+                          value: 'Child Abuse',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Other'),
+                          value: 'Other',
                         ),
                       ],
                     ),
@@ -247,34 +319,12 @@ class _FollowupScreenState extends State<FollowupScreen> {
                       child: Text('Preview', style: TextStyle(color: Colors.white),),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Confirm'),
-                              content: Text('Do you want to view Cases in Progress?'),
-                              actions: [
-                                FlatButton(
-                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                                  color: Colors.grey,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                        print(District +" ==  "+violenceType+ "  == "+fromDate+"== "+toDate);
 
-
-                                FlatButton(
-                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
-                                  onPressed: () {
-                                    //TODO : Submit Followup filter data
-
-                                  },
-                                  color: Colors.blueAccent,
-                                )
-                              ],
-                            );
-                          },
-                        );
+                        if(violenceType != "SELECT" &&  District != "" &&  fromDate != "" &&  toDate != "")
+                        {
+                          caseResearch( "SUPPORTED", District, violenceType, fromDate, toDate, start,  limit);
+                        }
                       },
                     ),
                   ],

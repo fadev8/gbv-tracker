@@ -24,6 +24,9 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
 
   ScrollController _controller = ScrollController();
   String start = "50", limit = "0";
+  String violenceType = 'SELECT';
+  String District;
+  List Districtdata = [];
   int startOffset = 50, limitOffset = 0;
   bool moreCasesAvailable = true;
   bool loadingMoreCases = false;
@@ -32,14 +35,35 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
   DateTime _date = DateTime.now();
   bool loadingData = false;
 
+
+
+
+
+
+
+  Future<String> DistrictData() async {
+
+    var user_category = await getRef("user_category");
+    Districtdata = [];
+    if (user_category != null) {
+      DistrictListJson = await getAllDistrict();
+      setState(() {
+        if (DistrictListJson['status'] == "1") {
+          Districtdata = DistrictListJson['data'];
+          print(Districtdata);
+        }
+      });
+    } else {}
+
+  }
   ReceivedCaseData() async {
     setState(() {
       loadingData = true;
     });
     var user_category = await getRef("user_category");
-
+    receivedCasesList=[];
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         receivedCasesListJson = await getReceivedCaseList(start, limit);
         setState(() {
           if (receivedCasesListJson['status'] == "1") {
@@ -47,7 +71,37 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
             print(receivedCasesList);
           }
         });
-      } else {}
+//      } else {}
+    } else {}
+
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+
+
+  caseResearch(String Status,String District,String Type,String from,String to,String start, String limit) async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
+    receivedCasesList=[];
+    if (user_category != null) {
+//      if (user_category == "SU") {
+      receivedCasesListJson = await getReceivedCaseResearch(Status,District,Type,from,to,start, limit);
+      setState(() {
+        if (receivedCasesListJson['status'] == "1") {
+          receivedCasesList.addAll(receivedCasesListJson['data']);
+          print(receivedCasesList);
+        }
+//        else
+//          {
+//            print(receivedCasesListJson['status']);
+//            print(receivedCasesListJson['message']);
+//          }
+      });
+//      } else {}
     } else {}
 
     setState(() {
@@ -77,14 +131,14 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         receivedCasesListJson = await getReceivedCaseList(start, limit);
 
         if (receivedCasesListJson['status'] == "1") {
           receivedCasesList = receivedCasesListJson['data'];
           print('Data is retrieved');
         }
-      } else {}
+//      } else {}
     } else {}
     setState(() {});
 
@@ -117,6 +171,7 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
       }
     });
     ReceivedCaseData();
+    DistrictData();
   }
 
   @override
@@ -154,43 +209,64 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                   spacing: 20,
                   children: [
                     DropdownButton(
-                      onChanged: (index) {
-                        if (index != 0) {
-                          setState(() {
-                            //TODO action when the menu is tapped
-                            print('selected index $index');
-                          });
-                        }
+                      focusColor: Colors.grey,
+                      isExpanded: true,
+                      onChanged: (newVal) {
+                        setState(() {
+                          District = newVal;
+                          print(District);
+
+                        });
                       },
-                      items: [
-                        //TODO populate the Dropdown with data
-                        DropdownMenuItem(
-                          child: Text('District'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 1'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 2'),
-                        ),
-                      ],
+                      value: District,
+                      items: Districtdata.map((item) {
+                        return new DropdownMenuItem(
+                          child: new Text(item['name']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
                     ),
                     DropdownButton(
                       focusColor: Colors.grey,
-                      onChanged: (index) {
-                        //TODO action when the menu is tapped
-                        print('selected index $index');
+                      isExpanded: true,
+                      onChanged: (val) {
+                        setState(() {
+                          violenceType = val;
+                          print(violenceType);
+                        });
                       },
                       items: [
                         //TODO populate the Dropdown with data
                         DropdownMenuItem(
-                          child: Text('GBV type'),
+                          child: Text(violenceType),
                         ),
                         DropdownMenuItem(
-                          child: Text('Received cases'),
+                          child: Text('Physical'),
+                          value: 'Physical',
                         ),
                         DropdownMenuItem(
-                          child: Text('Followup in progress'),
+                          child: Text('Psychological'),
+                          value: 'Psychological',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Sexual'),
+                          value: 'Sexual',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Property'),
+                          value: 'Property',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Teen Pregnancy'),
+                          value: 'Teen Pregnancy',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Child Abuse'),
+                          value: 'Child Abuse',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Other'),
+                          value: 'Other',
                         ),
                       ],
                     ),
@@ -250,38 +326,12 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                       ),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Confirm'),
-                              content:
-                                  Text('Do you want to view Received Cases?'),
-                              actions: [
-                                FlatButton(
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  color: Colors.grey,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                FlatButton(
-                                  child: Text(
-                                    'Confirm',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    //TODO : Submit Received Case filter data
-                                  },
-                                  color: Colors.blueAccent,
-                                )
-                              ],
-                            );
-                          },
-                        );
+//                        print(District +" ==  "+violenceType+ "  == "+fromDate+"== "+toDate);
+
+                          if(violenceType != "SELECT" &&  District != "" &&  fromDate != "" &&  toDate != "")
+                          {
+                              caseResearch( "PENDING", District, violenceType, fromDate, toDate, start,  limit);
+                          }
                       },
                     ),
                   ],
@@ -323,14 +373,23 @@ class _ReceivedCaseScreenState extends State<ReceivedCaseScreen> {
                                               null
                                           ? element["user_firstname"]+" "+element["user_lastname"]
                                           : " ")),
-                                      DataCell(Text(element["victim_name"])),
-                                      DataCell(Text(element["violence_type"])),
+                                      DataCell(Text(element["victim_name"] !=
+                                          null
+                                          ? element["victim_name"] :"")),
+                                      DataCell( Text(element["violence_type"] !=
+                                          null
+                                          ? element["violence_type"]
+                                          : " ")),
                                       DataCell(Text(
                                           element["violence_description"] !=
                                                   null
                                               ? element["violence_description"]
                                               : "N/A")),
-                                      DataCell(Text(element["received_date"])),
+                                      DataCell( Text(
+                                          element["received_date"] !=
+                                              null
+                                              ? element["received_date"]
+                                              : "N/A")),
                                     ],
                                   )),
                             )

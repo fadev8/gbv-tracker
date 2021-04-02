@@ -55,107 +55,107 @@ class _FigurePageState extends State<FigurePage> {
       padding: EdgeInsets.all(10),
       children: [
         //Button area
-        ExpansionTile(
-          title: Text('Filter'),
-          leading: Icon(Icons.filter_list),
-          children: [
-            Column(
-              children: [
-                Wrap(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FlatButton(
-                          color: Colors.grey,
-                          child: Text('From'),
-                          onPressed: () async{
-                            fromDate = await initDatePicker();
-                            setState(() {
-                            });
-                          },
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            fromDate ?? '',
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FlatButton(
-                          color: Colors.grey,
-                          padding: EdgeInsets.all(0),
-                          child: Text('To'),
-                          onPressed: ()async{
-                            toDate = await initDatePicker();
-                            setState(() {
-                            });
-                          },
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            toDate ?? '',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10).copyWith(bottom: 0),
-                      child: FlatButton(
-                        child: Text('Preview',style: TextStyle(color: Colors.white),),
-                        color: Colors.blueAccent,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Confirm'),
-                                content: Text('Preview this data?'),
-                                actions: [
-                                  FlatButton(
-                                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                                    color: Colors.grey,
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-
-
-                                  FlatButton(
-                                    child: Text('Confirm', style: TextStyle(color: Colors.white),),
-                                    onPressed: () {
-                                      //TODO : Submit Figure filter data
-
-                                    },
-                                    color: Colors.blueAccent,
-                                  )
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
+//        ExpansionTile(
+//          title: Text('Filter'),
+//          leading: Icon(Icons.filter_list),
+//          children: [
+//            Column(
+//              children: [
+//                Wrap(
+//                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                  children: [
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: [
+//                        FlatButton(
+//                          color: Colors.grey,
+//                          child: Text('From'),
+//                          onPressed: () async{
+//                            fromDate = await initDatePicker();
+//                            setState(() {
+//                            });
+//                          },
+//                        ),
+//                        Container(
+//                          padding: EdgeInsets.all(8),
+//                          child: Text(
+//                            fromDate ?? '',
+//                          ),
+//                        ),
+//                      ],
+//                    ),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: [
+//                        FlatButton(
+//                          color: Colors.grey,
+//                          padding: EdgeInsets.all(0),
+//                          child: Text('To'),
+//                          onPressed: ()async{
+//                            toDate = await initDatePicker();
+//                            setState(() {
+//                            });
+//                          },
+//                        ),
+//                        Container(
+//                          padding: EdgeInsets.all(8),
+//                          child: Text(
+//                            toDate ?? '',
+//                          ),
+//                        ),
+//                      ],
+//                    ),
+//                  ],
+//                ),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.end,
+//                  children: [
+//                    Container(
+//                      padding: EdgeInsets.all(10).copyWith(bottom: 0),
+//                      child: FlatButton(
+//                        child: Text('Preview',style: TextStyle(color: Colors.white),),
+//                        color: Colors.blueAccent,
+//                        onPressed: () {
+//                          showDialog(
+//                            context: context,
+//                            builder: (context) {
+//                              return AlertDialog(
+//                                title: Text('Confirm'),
+//                                content: Text('Preview this data?'),
+//                                actions: [
+//                                  FlatButton(
+//                                    child: Text('Cancel',style: TextStyle(color: Colors.black),),
+//                                    color: Colors.grey,
+//                                    onPressed: () {
+//                                      Navigator.pop(context);
+//                                    },
+//                                  ),
+//
+//
+//                                  FlatButton(
+//                                    child: Text('Confirm', style: TextStyle(color: Colors.white),),
+//                                    onPressed: () {
+//                                      //TODO : Submit Figure filter data
+//
+//                                    },
+//                                    color: Colors.blueAccent,
+//                                  )
+//                                ],
+//                              );
+//                            },
+//                          );
+//                        },
+//                      ),
+//                    ),
+//                  ],
+//                ),
+//              ],
+//            ),
+//            SizedBox(
+//              height: 20,
+//            ),
+//          ],
+//        ),
         FigureDataTile(
           title: 'All cases',
           dataNumber: widget.allCases,

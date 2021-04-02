@@ -29,6 +29,60 @@ class _TrashScreenState extends State<TrashScreen> {
   bool loadingData = false;
   ScrollController _controller = ScrollController();
 
+
+
+
+
+  String District;
+  List Districtdata = [];
+  String violenceType = 'SELECT';
+
+
+  caseResearch(String Status,String District,String Type,String from,String to,String start, String limit) async {
+    setState(() {
+      loadingData = true;
+    });
+    var user_category = await getRef("user_category");
+    deletedCasesList=[];
+    if (user_category != null) {
+//      if (user_category == "SU") {
+      deletedCasesListJson = await getReceivedCaseResearch(Status,District,Type,from,to,start, limit);
+      setState(() {
+        if (deletedCasesListJson['status'] == "1") {
+          deletedCasesList.addAll(deletedCasesListJson['data']);
+          print(deletedCasesList);
+        }
+        else
+        {
+//            print(supportedCasesList['status']);
+//            print(supportedCasesList['message']);
+        }
+      });
+//      } else {}
+    } else {}
+
+    setState(() {
+      loadingData = false;
+    });
+  }
+
+
+  Future<String> DistrictData() async {
+
+    var user_category = await getRef("user_category");
+    Districtdata = [];
+    if (user_category != null) {
+      DistrictListJson = await getAllDistrict();
+      setState(() {
+        if (DistrictListJson['status'] == "1") {
+          Districtdata = DistrictListJson['data'];
+          print(Districtdata);
+        }
+      });
+    } else {}
+
+  }
+
   loadMoreCases() async {
     //print('invoqued loading more cases...');
     if (moreCasesAvailable == false) {
@@ -51,7 +105,7 @@ class _TrashScreenState extends State<TrashScreen> {
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         deletedCasesListJson = await getDeletedCaseList(start, limit);
         setState(() {
           if (deletedCasesListJson['status'] == "1") {
@@ -59,7 +113,7 @@ class _TrashScreenState extends State<TrashScreen> {
             print(deletedCasesList);
           }
         });
-      } else {}
+//      } else {}
     } else {}
     setState(() {});
 
@@ -73,7 +127,7 @@ class _TrashScreenState extends State<TrashScreen> {
     var user_category = await getRef("user_category");
 
     if (user_category != null) {
-      if (user_category == "SU") {
+//      if (user_category == "SU") {
         deletedCasesListJson = await getDeletedCaseList(start, limit);
         setState(() {
           if (deletedCasesListJson['status'] == "1") {
@@ -81,7 +135,7 @@ class _TrashScreenState extends State<TrashScreen> {
             print(deletedCasesList);
           }
         });
-      } else {}
+//      } else {}
     } else {}
 
     setState(() {
@@ -106,6 +160,7 @@ class _TrashScreenState extends State<TrashScreen> {
   void initState() {
     super.initState();
     DeletedCaseData();
+    DistrictData();
   }
 
   @override
@@ -140,46 +195,67 @@ class _TrashScreenState extends State<TrashScreen> {
               leading: Icon(Icons.filter_list),
               children: [
                 Wrap(
-                  spacing: 4,
+                  spacing: 20,
                   children: [
                     DropdownButton(
-                      onChanged: (index) {
-                        if (index != 0) {
-                          setState(() {
-                            //TODO action when the menu is tapped
-                            print('selected index $index');
-                          });
-                        }
+                      focusColor: Colors.grey,
+                      isExpanded: true,
+                      onChanged: (newVal) {
+                        setState(() {
+                          District = newVal;
+                          print(District);
+
+                        });
                       },
-                      items: [
-                        //TODO populate the Dropdown with data
-                        DropdownMenuItem(
-                          child: Text('Select District'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 1'),
-                        ),
-                        DropdownMenuItem(
-                          child: Text('District 2'),
-                        ),
-                      ],
+                      value: District,
+                      items: Districtdata.map((item) {
+                        return new DropdownMenuItem(
+                          child: new Text(item['name']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
                     ),
                     DropdownButton(
                       focusColor: Colors.grey,
-                      onChanged: (index) {
-                        //TODO action when the menu is tapped
-                        print('selected index $index');
+                      isExpanded: true,
+                      onChanged: (val) {
+                        setState(() {
+                          violenceType = val;
+                          print(violenceType);
+                        });
                       },
                       items: [
                         //TODO populate the Dropdown with data
                         DropdownMenuItem(
-                          child: Text('GBV type'),
+                          child: Text(violenceType),
                         ),
                         DropdownMenuItem(
-                          child: Text('Received cases'),
+                          child: Text('Physical'),
+                          value: 'Physical',
                         ),
                         DropdownMenuItem(
-                          child: Text('Followup in progress'),
+                          child: Text('Psychological'),
+                          value: 'Psychological',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Sexual'),
+                          value: 'Sexual',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Property'),
+                          value: 'Property',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Teen Pregnancy'),
+                          value: 'Teen Pregnancy',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Child Abuse'),
+                          value: 'Child Abuse',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Other'),
+                          value: 'Other',
                         ),
                       ],
                     ),
@@ -236,34 +312,12 @@ class _TrashScreenState extends State<TrashScreen> {
                       child: Text('Preview', style: TextStyle(color: Colors.white),),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Confirm'),
-                              content: Text('Do you want to view Deleted cases ?'),
-                              actions: [
-                                FlatButton(
-                                  child: Text('Cancel',style: TextStyle(color: Colors.black),),
-                                  color: Colors.grey,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                        print(District +" ==  "+violenceType+ "  == "+fromDate+"== "+toDate);
 
-
-                                FlatButton(
-                                  child: Text('Confirm', style: TextStyle(color: Colors.white),),
-                                  onPressed: () {
-                                    //TODO : Submit Trash filter data
-
-                                  },
-                                  color: Colors.blueAccent,
-                                )
-                              ],
-                            );
-                          },
-                        );
+                        if(violenceType != "SELECT" &&  District != "" &&  fromDate != "" &&  toDate != "")
+                        {
+                          caseResearch( "DELETED", District, violenceType, fromDate, toDate, start,  limit);
+                        }
                       },
                     ),
                   ],
